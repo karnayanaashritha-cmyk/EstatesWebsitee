@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="mp-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e11d48" />
+      <stop offset="100%" stop-color="#9f1239" />
+    </linearGradient>
+    <linearGradient id="mp-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+  <!-- Background rounded rect -->
+  <rect width="100" height="100" rx="24" fill="#0f172a" />
+  
+  <!-- Architectural Skyline / Modern Towers -->
+  <!-- Left lower building -->
+  <rect x="22" y="46" width="16" height="36" rx="3" fill="#334155" />
+  <rect x="26" y="52" width="3" height="4" rx="0.5" fill="#94a3b8" />
+  <rect x="31" y="52" width="3" height="4" rx="0.5" fill="#94a3b8" />
+  <rect x="26" y="60" width="3" height="4" rx="0.5" fill="#94a3b8" />
+  <rect x="31" y="60" width="3" height="4" rx="0.5" fill="#94a3b8" />
+  <rect x="26" y="68" width="3" height="4" rx="0.5" fill="#94a3b8" />
+  <rect x="31" y="68" width="3" height="4" rx="0.5" fill="#94a3b8" />
+
+  <!-- Center soaring tower -->
+  <path d="M42 22C42 20.3431 43.3431 19 45 19H55C56.6569 19 58 20.3431 58 22V82H42V22Z" fill="url(#mp-grad)" />
+  <!-- Spire -->
+  <rect x="49" y="12" width="2" height="7" fill="#f43f5e" rx="1" />
+  <!-- Windows on center tower -->
+  <rect x="46" y="26" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="51" y="26" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="46" y="35" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="51" y="35" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="46" y="44" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="51" y="44" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="46" y="53" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="51" y="53" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="46" y="62" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  <rect x="51" y="62" width="3.5" height="5" rx="0.8" fill="#ffffff" opacity="0.9" />
+  
+  <!-- Right building with sloped penthouse -->
+  <path d="M62 38L74 46V82H62V38Z" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+  <rect x="66" y="52" width="3" height="4" rx="0.5" fill="#f59e0b" opacity="0.85" />
+  <rect x="66" y="60" width="3" height="4" rx="0.5" fill="#f59e0b" opacity="0.85" />
+  <rect x="66" y="68" width="3" height="4" rx="0.5" fill="#f59e0b" opacity="0.85" />
+
+  <!-- Base baseline ground line -->
+  <line x1="16" y1="82" x2="84" y2="82" stroke="#e11d48" stroke-width="3" stroke-linecap="round" />
+  <!-- Accent golden sparkle dot -->
+  <circle cx="68" cy="24" r="3" fill="url(#mp-gold)" />
+</svg>
