@@ -162,33 +162,33 @@ export const UserDashboardPage: React.FC<UserDashboardPageProps> = ({
         </div>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">My Listings</span>
-            <div className="text-2xl font-extrabold text-slate-900 mt-1">{myProperties.length}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">My Listings</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">{myProperties.length}</div>
           </div>
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Total Views</span>
-            <div className="text-2xl font-extrabold text-rose-600 mt-1">{totalViews}</div>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Total Views</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-rose-600 mt-1">{totalViews}</div>
           </div>
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Buyer Enquiries</span>
-            <div className="text-2xl font-extrabold text-emerald-600 mt-1">{enquiries.length}</div>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Buyer Enquiries</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-1">{enquiries.length}</div>
           </div>
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">Approval Status</span>
-            <div className="text-sm font-bold text-slate-800 mt-2 flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              <span>All Active</span>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Approval Status</span>
+            <div className="text-xs sm:text-sm font-bold text-slate-800 mt-2 flex items-center gap-1.5 truncate">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0" />
+              <span className="truncate">All Active</span>
             </div>
           </div>
         </div>
 
         {/* Tab Navigators */}
-        <div className="flex border-b border-slate-200 gap-4 text-sm font-bold">
+        <div className="flex border-b border-slate-200 gap-4 text-sm font-bold overflow-x-auto scrollbar-none whitespace-nowrap pb-0.5">
           <button
             onClick={() => setActiveTab('properties')}
-            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 ${
+            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 flex-shrink-0 ${
               activeTab === 'properties'
                 ? 'border-rose-600 text-rose-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -200,7 +200,7 @@ export const UserDashboardPage: React.FC<UserDashboardPageProps> = ({
 
           <button
             onClick={() => setActiveTab('enquiries')}
-            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 ${
+            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 flex-shrink-0 ${
               activeTab === 'enquiries'
                 ? 'border-rose-600 text-rose-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'

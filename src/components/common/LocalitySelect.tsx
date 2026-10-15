@@ -106,7 +106,7 @@ export const LocalitySelect: React.FC<LocalitySelectProps> = ({
 
       {/* Searchable Dropdown Popover */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fadeIn max-h-[380px] flex flex-col min-w-[280px]">
+        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fadeIn max-h-[380px] flex flex-col w-full max-w-[calc(100vw-2rem)] sm:min-w-[280px]">
           {/* Search Input Box */}
           <div className="p-2.5 border-b border-slate-100 bg-slate-50/70">
             <div className="relative">

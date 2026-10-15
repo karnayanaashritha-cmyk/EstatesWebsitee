@@ -10,10 +10,10 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSupabaseModal }) => {
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <footer className="bg-slate-900 text-slate-300 pt-12 sm:pt-16 pb-12 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 pb-10 sm:pb-12 border-b border-slate-800">
           {/* Brand & About */}
           <div className="lg:col-span-2 space-y-4">
             <Logo size="md" light showTagline />
@@ -24,15 +24,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSupabaseModal 
             <div className="space-y-2 text-xs text-slate-400 pt-2">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <span>Level 4, Knowledge City, HITEC City, Hyderabad, Telangana 500081</span>
+                <span className="break-words">Level 4, Knowledge City, HITEC City, Hyderabad, Telangana 500081</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <span>+91 (040) 4892 0000 / +91 91210 55443</span>
+                <span className="break-words">+91 (040) 4892 0000 / +91 91210 55443</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <span>hello@hyderabadheights.in</span>
+                <span className="break-all">hello@hyderabadheights.in</span>
               </div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSupabaseModal 
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3 text-center sm:text-left">
           <div>
             &copy; {new Date().getFullYear()} Hyderabad Heights Portal. All rights reserved. Built for Hyderabad, Telangana.
           </div>

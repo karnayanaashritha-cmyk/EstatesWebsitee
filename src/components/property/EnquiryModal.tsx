@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Property } from '../../types';
 import { EnquiryService } from '../../services/enquiryService';
 import { AuthService } from '../../services/authService';
@@ -27,6 +27,23 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   isOpen,
   onClose
 }) => {
+  // Lock background scroll & handle Escape key
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen || !property) return null;
 
   const currentUser = AuthService.getCurrentUser();
@@ -76,10 +93,18 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   const primaryImage = property.images?.[0]?.image_url || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      onClick={e => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Property Enquiry"
+    >
+      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)]">
         {/* Header */}
-        <div className="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between">
+        <div className="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-lg font-bold">Property Enquiry</h2>
             <p className="text-xs text-slate-400">Directly contact owner / authorized representative</p>

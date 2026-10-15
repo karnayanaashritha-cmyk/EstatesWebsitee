@@ -8,20 +8,20 @@ interface AboutPageProps {
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div className="min-h-screen bg-slate-50 py-8 sm:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Hero Banner */}
-        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm text-center space-y-4">
+        <div className="bg-white rounded-3xl p-5 xs:p-6 sm:p-12 border border-slate-200 shadow-sm text-center space-y-4">
           <div className="flex justify-center mb-2">
             <Logo size="lg" />
           </div>
           <span className="text-xs font-bold text-rose-600 uppercase tracking-widest">
             About Hyderabad Heights
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Hyderabad’s Premier Real Estate Portal
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Hyderabad Heights is built around a simple idea: finding a home should feel clear, local, and personal. We bring Hyderabad homes and neighbourhoods together in one considered marketplace.
           </p>
         </div>
@@ -60,7 +60,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Our Story & Values */}
-        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-6">
+        <div className="bg-white rounded-3xl p-5 xs:p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
           <h2 className="text-2xl font-extrabold text-slate-900">
             Our Commitment to Hyderabad Real Estate
           </h2>

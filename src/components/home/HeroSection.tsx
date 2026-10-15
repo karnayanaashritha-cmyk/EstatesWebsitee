@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Key, PlusCircle, Search, ShieldCheck, MapPin, Sparkles, TrendingUp } from 'lucide-react';
+import { Search, TrendingUp } from 'lucide-react';
 import { PROPERTY_TYPES } from '../../types';
 import { LocalitySelect } from '../common/LocalitySelect';
 import { AreaRangeSelect } from '../common/AreaRangeSelect';
@@ -30,45 +30,86 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
   const trendingLocalities = ['Kokapet', 'Gachibowli', 'Tellapur', 'Narsingi', 'Miyapur', 'Financial District', 'Manikonda', 'Kukatpally'];
 
   return (
-    <section className="relative overflow-hidden bg-[#f7f5f1] pt-12 pb-12 md:pt-16 md:pb-16">
-      <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(#b69b7a_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute -top-32 -right-20 w-[34rem] h-[34rem] rounded-full bg-amber-100/70 blur-3xl pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-[1.05fr_.95fr] gap-8 lg:gap-12 items-center">
-          <div className="relative z-10 py-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-stone-200 text-stone-700 text-xs font-semibold shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-rose-600" /> Hyderabad living, thoughtfully found
+    <section className="relative overflow-hidden bg-[#f7f5f1] pt-6 pb-10 sm:pt-8 sm:pb-12 md:pt-12 md:pb-16">
+      <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(#b69b7a_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="absolute -top-32 -right-20 w-[34rem] h-[34rem] rounded-full bg-amber-100/50 blur-3xl pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        {/* Navy & Gold Hero Card Container */}
+        <div className="relative overflow-hidden bg-[#102D47] rounded-2xl sm:rounded-3xl p-5 xs:p-6 sm:p-10 md:p-12 lg:p-14 shadow-2xl shadow-[#102D47]/20 border border-[#52697D]/30 max-w-5xl mx-auto">
+          {/* Subtle ambient lighting */}
+          <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#DDB86F]/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+
+          {/* Brand section */}
+          <div className="relative z-10 flex items-center gap-3 sm:gap-4">
+            {/* Rounded-square golden icon container */}
+            <div className="w-11 h-11 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#DDB86F] p-2 sm:p-3 flex items-center justify-center flex-shrink-0 shadow-md">
+              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#102D47]" stroke="currentColor">
+                <path d="M3 21h18" strokeWidth="2" strokeLinecap="round" />
+                <path d="M5 21V11l4-4v14" strokeWidth="2" strokeLinejoin="round" />
+                <path d="M9 7l5-4 5 4v14" strokeWidth="2" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15" />
+                <path d="M13 10h2v3h-2z" fill="currentColor" />
+                <path d="M13 15h2v3h-2z" fill="currentColor" />
+                <circle cx="16" cy="5" r="1.5" fill="#102D47" stroke="none" />
+              </svg>
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-semibold text-slate-900 tracking-tight leading-[1.05] max-w-2xl">
-              Find a place that feels like <span className="text-rose-700 italic">your next chapter.</span>
-            </h1>
-            <p className="mt-5 text-base text-slate-600 leading-relaxed max-w-xl">
-              Explore considered homes across Hyderabad, from the energy of the IT corridor to quieter neighbourhoods made for settling in.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <button id="hero-buy-btn" onClick={() => onNavigate('/search', { listingType: 'buy' })} className="inline-flex items-center gap-2 px-5 py-3 bg-rose-700 hover:bg-rose-800 text-white rounded-xl font-bold text-sm shadow-lg shadow-rose-900/15 transition"><Home className="w-4 h-4" /> Buy a home</button>
-              <button id="hero-rent-btn" onClick={() => onNavigate('/search', { listingType: 'rent' })} className="inline-flex items-center gap-2 px-5 py-3 bg-white hover:bg-rose-50 text-slate-800 border border-stone-300 rounded-xl font-bold text-sm transition"><Key className="w-4 h-4 text-rose-700" /> Find a rental</button>
-              <button id="hero-list-btn" onClick={() => onNavigate('/submit-property')} className="inline-flex items-center gap-2 px-5 py-3 text-slate-700 hover:text-rose-700 font-bold text-sm transition"><PlusCircle className="w-4 h-4" /> List your property</button>
-            </div>
-            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-600">
-              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-emerald-700" /> Clear listing details</span>
-              <span className="inline-flex items-center gap-1.5"><MapPin className="w-4 h-4 text-rose-700" /> Hyderabad focused</span>
+
+            {/* Brand text */}
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold tracking-wider leading-none">
+                <span className="text-white">HYDERABAD </span>
+                <span className="text-[#DDB86F]">HEIGHTS</span>
+              </div>
+              <span className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[#D6DFE8] mt-1 sm:mt-1.5 uppercase leading-none truncate">
+                YOUR HOME. YOUR FUTURE.
+              </span>
             </div>
           </div>
 
-          <div className="relative min-h-[320px] sm:min-h-[410px] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-900/15 border border-white">
-            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85" alt="A warm, contemporary home" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/10 to-transparent" />
-            <div className="absolute top-5 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-xs font-semibold text-slate-800 backdrop-blur"><span className="w-2 h-2 rounded-full bg-emerald-500" /> A city to call home</div>
-            <div className="absolute bottom-0 p-6 sm:p-8 text-white">
-              <p className="text-xs uppercase tracking-[.2em] text-white/75">Made for Hyderabad</p>
-              <p className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">Room to grow. Space to belong.</p>
-              <p className="mt-2 text-sm text-white/80">Discover homes across the neighbourhoods you love.</p>
-            </div>
+          {/* Thin subtle horizontal divider */}
+          <div className="relative z-10 w-full h-px bg-[#52697D] my-4 sm:my-8 opacity-70" />
+
+          {/* Main heading */}
+          <h1 className="relative z-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.18] max-w-2xl">
+            Find Your Dream Home in Hyderabad
+          </h1>
+
+          {/* Subtitle */}
+          <p className="relative z-10 mt-2.5 sm:mt-4 text-xs xs:text-sm sm:text-base md:text-lg text-[#D6DFE8] font-normal leading-relaxed">
+            Buy · Rent · Sell — Flats, Villas & Plots
+          </p>
+
+          {/* Action buttons */}
+          <div className="relative z-10 mt-6 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-4">
+            <button
+              id="hero-buy-btn"
+              type="button"
+              onClick={() => onNavigate('/search', { listingType: 'buy' })}
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-100 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+            >
+              Buy Property
+            </button>
+            <button
+              id="hero-rent-btn"
+              type="button"
+              onClick={() => onNavigate('/search', { listingType: 'rent' })}
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-100 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+            >
+              Rent Property
+            </button>
+            <button
+              id="hero-list-btn"
+              type="button"
+              onClick={() => onNavigate('/submit-property')}
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-[#DDB86F] hover:bg-[#d4ad62] text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#DDB86F]"
+            >
+              List Property
+            </button>
           </div>
         </div>
 
-        <div className="relative max-w-5xl mx-auto mt-10 bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-stone-200 p-3 sm:p-4">
+        {/* Search Bar */}
+        <div className="relative max-w-5xl mx-auto mt-6 sm:mt-10 bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-stone-200 p-3 sm:p-4">
           <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
             <div className="sm:col-span-3 relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -80,20 +121,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               <select value={selectedCategory} onChange={event => setSelectedCategory(event.target.value)} className="min-w-0 flex-1 px-3 py-3 bg-stone-50 text-xs sm:text-sm rounded-xl border border-stone-200 focus:border-rose-500 outline-none truncate font-medium text-slate-700">
                 <option value="">All Categories</option>{PROPERTY_TYPES.map(type => <option key={type.id} value={type.id}>{type.label}</option>)}
               </select>
-              <button type="submit" className="py-3 px-5 bg-slate-900 hover:bg-rose-800 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5"><Search className="w-4 h-4" /><span>Find</span></button>
+              <button type="submit" className="py-3 px-5 bg-slate-900 hover:bg-rose-800 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5 flex-shrink-0"><Search className="w-4 h-4" /><span>Find</span></button>
             </div>
           </form>
-          <div className="mt-3.5 pt-3 border-t border-stone-100 flex flex-wrap items-center gap-1.5 text-xs">
-            <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1"><TrendingUp className="w-3.5 h-3.5 text-rose-600" /> Popular:</span>
-            {trendingLocalities.map(locality => <button key={locality} onClick={() => onNavigate('/search', { locality })} className="px-2.5 py-1.5 rounded-lg bg-stone-100 hover:bg-rose-100/70 hover:text-rose-700 text-slate-700 font-medium transition">{locality}</button>)}
+          <div className="mt-3 pt-3 border-t border-stone-100 flex items-center gap-1.5 text-xs overflow-x-auto scrollbar-none pb-1">
+            <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1 flex-shrink-0"><TrendingUp className="w-3.5 h-3.5 text-rose-600" /> Popular:</span>
+            {trendingLocalities.map(locality => <button key={locality} onClick={() => onNavigate('/search', { locality })} className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-rose-100/70 hover:text-rose-700 text-slate-700 font-medium transition whitespace-nowrap flex-shrink-0">{locality}</button>)}
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          <div className="bg-white/70 p-3 rounded-2xl border border-stone-200 shadow-sm"><div className="text-lg font-extrabold text-slate-900">{totalListingsCount}</div><div className="text-[11px] font-semibold text-slate-500">Available listings</div></div>
-          <div className="bg-white/70 p-3 rounded-2xl border border-stone-200 shadow-sm"><div className="text-lg font-extrabold text-rose-700">8 areas</div><div className="text-[11px] font-semibold text-slate-500">Popular localities</div></div>
-          <div className="bg-white/70 p-3 rounded-2xl border border-stone-200 shadow-sm"><div className="text-lg font-extrabold text-slate-900">Buy · Rent</div><div className="text-[11px] font-semibold text-slate-500">Ways to find home</div></div>
-          <div className="bg-white/70 p-3 rounded-2xl border border-stone-200 shadow-sm"><div className="text-lg font-extrabold text-emerald-700">Direct</div><div className="text-[11px] font-semibold text-slate-500">Owner connections</div></div>
+        {/* Stats Row */}
+        <div className="max-w-5xl mx-auto mt-4 sm:mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-center">
+          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-slate-900">{totalListingsCount}</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Available listings</div></div>
+          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-rose-700">8 areas</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Popular localities</div></div>
+          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-slate-900">Buy · Rent</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Ways to find home</div></div>
+          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-emerald-700">Direct</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Owner connections</div></div>
         </div>
       </div>
     </section>

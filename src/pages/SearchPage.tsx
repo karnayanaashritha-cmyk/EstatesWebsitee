@@ -64,6 +64,23 @@ export const SearchPage: React.FC<SearchPageProps> = ({
     loadProperties();
   }, [filters]);
 
+  // Lock background scroll & handle Escape when mobile filter drawer is open
+  useEffect(() => {
+    if (mobileFilterOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setMobileFilterOpen(false);
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [mobileFilterOpen]);
+
   const loadProperties = async () => {
     setLoading(true);
     try {
@@ -226,12 +243,12 @@ export const SearchPage: React.FC<SearchPageProps> = ({
           {/* Listing Type Radio Pills & Popular Localities */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100">
             {/* Listing Type Radio Pills */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start">
+            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start max-w-full overflow-x-auto scrollbar-none">
               {(['all', 'buy', 'rent', 'lease'] as const).map(type => (
                 <button
                   key={type}
                   onClick={() => setFilters(prev => ({ ...prev, listingType: type }))}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition whitespace-nowrap flex-shrink-0 ${
                     filters.listingType === type
                       ? 'bg-rose-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -243,7 +260,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             </div>
 
             {/* Quick Locality chips */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
               <span className="text-slate-400 font-semibold flex items-center gap-1 flex-shrink-0 mr-1 text-[11px]">
                 <MapPin className="w-3.5 h-3.5 text-rose-500" />
                 Quick:
@@ -544,22 +561,34 @@ export const SearchPage: React.FC<SearchPageProps> = ({
 
       {/* MOBILE FILTERS MODAL DRAWER */}
       {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-sm bg-white h-full ml-auto p-5 overflow-y-auto space-y-6 flex flex-col justify-between">
-            <div className="space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 font-bold text-base text-slate-900">
-                  <Filter className="w-5 h-5 text-rose-600" />
-                  <span>Filter Properties</span>
-                </div>
-                <button
-                  onClick={() => setMobileFilterOpen(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+        <div 
+          className="fixed inset-0 z-50 flex lg:hidden bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+          onClick={e => {
+            if (e.target === e.currentTarget) setMobileFilterOpen(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Filter Properties"
+        >
+          <div className="w-full max-w-sm bg-white h-full ml-auto flex flex-col shadow-2xl">
+            {/* Sticky Header */}
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 flex-shrink-0 bg-white">
+              <div className="flex items-center gap-2 font-bold text-base text-slate-900">
+                <Filter className="w-5 h-5 text-rose-600" />
+                <span>Filter Properties</span>
               </div>
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(false)}
+                className="p-2 -mr-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 active:scale-95 transition"
+                aria-label="Close filters"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
+            {/* Scrollable Filters Body */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5">
               {/* Locality */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -656,19 +685,21 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               </div>
             </div>
 
-
-            <div className="pt-4 border-t border-slate-200 flex gap-2">
+            {/* Sticky Actions Footer with safe-area padding */}
+            <div className="p-4 sm:p-5 border-t border-slate-200 bg-white flex gap-2 flex-shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
               <button
+                type="button"
                 onClick={handleResetFilters}
-                className="flex-1 py-2.5 border border-slate-300 rounded-xl text-xs font-bold text-slate-700"
+                className="flex-1 py-3 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 active:scale-95 transition"
               >
                 Reset
               </button>
               <button
+                type="button"
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-1 py-2.5 bg-rose-600 text-white rounded-xl text-xs font-bold shadow-md"
+                className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-md active:scale-95 transition"
               >
-                Apply Filters
+                Apply Filters {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}
               </button>
             </div>
           </div>

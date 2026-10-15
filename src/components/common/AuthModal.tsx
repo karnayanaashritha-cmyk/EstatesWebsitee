@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Mail, Lock, User, Phone, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { AuthService } from '../../services/authService';
 import { UserRole } from '../../types';
@@ -25,6 +25,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Lock background scroll & handle Escape key
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -81,10 +98,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      onClick={e => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Authentication"
+    >
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)]">
         {/* Header */}
-        <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+        <div className="p-4 sm:p-6 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-xl font-bold">
               {mode === 'signin' ? 'Sign In to Hyderabad Heights' : 'Create an Account'}
@@ -102,7 +127,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Quick Demo Persona Switcher */}
-        <div className="bg-rose-50/70 border-b border-rose-100 p-4">
+        <div className="bg-rose-50/70 border-b border-rose-100 p-3.5 sm:p-4 flex-shrink-0">
           <div className="text-[11px] font-bold text-rose-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-rose-600" />
             1-Click Demo Persona Login (Instant Testing)
@@ -144,7 +169,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {error && (
             <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
               {error}

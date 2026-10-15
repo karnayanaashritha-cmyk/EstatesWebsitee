@@ -124,7 +124,7 @@ export const AreaRangeSelect: React.FC<AreaRangeSelectProps> = ({
 
       {/* Popover */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fadeIn p-3 w-80 max-w-[90vw]">
+        <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-1.5 z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fadeIn p-3 w-80 max-w-[calc(100vw-2rem)]">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
             Select Area Range (sq.ft)
           </div>

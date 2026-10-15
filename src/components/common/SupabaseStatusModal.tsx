@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Database, CheckCircle2, AlertCircle, Copy, Check, ExternalLink, X, RefreshCw } from 'lucide-react';
 import { getSupabaseCredentials, saveSupabaseCredentials, clearSupabaseCredentials } from '../../services/supabase';
 import { PropertyService } from '../../services/propertyService';
@@ -14,6 +14,23 @@ export const SupabaseStatusModal: React.FC<SupabaseStatusModalProps> = ({ isOpen
   const [inputKey, setInputKey] = useState(anonKey);
   const [copied, setCopied] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  // Lock background scroll & handle Escape key
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -125,10 +142,18 @@ CREATE TABLE IF NOT EXISTS public.enquiries (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      onClick={e => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Supabase Status"
+    >
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden max-h-[calc(100vh-2rem)] sm:max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+        <div className="p-4 sm:p-6 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-rose-600/30 border border-rose-500/40 text-rose-400">
               <Database className="w-6 h-6" />

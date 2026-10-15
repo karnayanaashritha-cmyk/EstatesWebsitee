@@ -332,19 +332,22 @@ export const SubmitPropertyPage: React.FC<SubmitPropertyPageProps> = ({
           /* MULTI-STEP WIZARD FORM */
           <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
             {/* Step Progress Indicators */}
-            <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50 text-xs font-bold text-center">
-              <div className={`py-4 px-2 border-r border-slate-200 ${step === 1 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
-                1. Basic Info & Pricing
+            <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50 text-[11px] sm:text-xs font-bold text-center">
+              <div className={`py-3.5 sm:py-4 px-1.5 sm:px-2 border-r border-slate-200 ${step === 1 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
+                <span className="hidden sm:inline">1. Basic Info & Pricing</span>
+                <span className="sm:hidden">1. Basics</span>
               </div>
-              <div className={`py-4 px-2 border-r border-slate-200 ${step === 2 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
-                2. Location & Specs
+              <div className={`py-3.5 sm:py-4 px-1.5 sm:px-2 border-r border-slate-200 ${step === 2 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
+                <span className="hidden sm:inline">2. Location & Specs</span>
+                <span className="sm:hidden">2. Specs</span>
               </div>
-              <div className={`py-4 px-2 ${step === 3 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
-                3. Photos & Contact
+              <div className={`py-3.5 sm:py-4 px-1.5 sm:px-2 ${step === 3 ? 'bg-white text-rose-600 border-b-2 border-b-rose-600' : 'text-slate-500'}`}>
+                <span className="hidden sm:inline">3. Photos & Contact</span>
+                <span className="sm:hidden">3. Photos</span>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+            <form onSubmit={handleSubmit} className="p-4 xs:p-6 sm:p-8 space-y-6">
               {error && (
                 <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />

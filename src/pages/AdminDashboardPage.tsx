@@ -161,27 +161,27 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
               onClick={() => {
                 setPropertyToEdit(null);
                 setAdminModalOpen(true);
               }}
-              className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-rose-900/40 transform hover:-translate-y-0.5"
+              className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-rose-900/40 transform hover:-translate-y-0.5 active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
               <span>+ Add Property for Sale</span>
             </button>
             <button
               onClick={loadAdminData}
-              className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition"
+              className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition active:scale-95"
               title="Refresh Data"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
             <button
               onClick={() => onNavigate('/')}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition active:scale-95"
             >
               View Public Portal
             </button>
@@ -189,34 +189,34 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-[11px] font-bold text-slate-500 uppercase">Total Properties</span>
-            <div className="text-2xl font-extrabold text-slate-900 mt-1">{properties.length}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5">
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] font-bold text-slate-500 uppercase truncate block">Total Properties</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">{properties.length}</div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-[11px] font-bold text-slate-500 uppercase">Pending Approval</span>
-            <div className="text-2xl font-extrabold text-amber-600 mt-1">{pendingCount}</div>
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] font-bold text-slate-500 uppercase truncate block">Pending Approval</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-amber-600 mt-1">{pendingCount}</div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-[11px] font-bold text-slate-500 uppercase">Live & Approved</span>
-            <div className="text-2xl font-extrabold text-emerald-600 mt-1">{approvedCount}</div>
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] font-bold text-slate-500 uppercase truncate block">Live & Approved</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-1">{approvedCount}</div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-[11px] font-bold text-slate-500 uppercase">Verified Badges</span>
-            <div className="text-2xl font-extrabold text-rose-600 mt-1">{verifiedCount}</div>
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+            <span className="text-[11px] font-bold text-slate-500 uppercase truncate block">Verified Badges</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-rose-600 mt-1">{verifiedCount}</div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <span className="text-[11px] font-bold text-slate-500 uppercase">Reported Listings</span>
-            <div className="text-2xl font-extrabold text-slate-800 mt-1">{reports.length}</div>
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm min-w-0 col-span-2 sm:col-span-1">
+            <span className="text-[11px] font-bold text-slate-500 uppercase truncate block">Reported Listings</span>
+            <div className="text-xl sm:text-2xl font-extrabold text-slate-800 mt-1">{reports.length}</div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b border-slate-200 gap-4 text-sm font-bold">
+        {/* Tabs - with smooth horizontal scrolling on mobile */}
+        <div className="flex border-b border-slate-200 gap-4 text-sm font-bold overflow-x-auto scrollbar-none whitespace-nowrap pb-0.5">
           <button
             onClick={() => setActiveTab('listings')}
-            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 ${
+            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 flex-shrink-0 ${
               activeTab === 'listings' ? 'border-rose-600 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -226,7 +226,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
           <button
             onClick={() => setActiveTab('reports')}
-            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 ${
+            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 flex-shrink-0 ${
               activeTab === 'reports' ? 'border-rose-600 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -236,7 +236,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
           <button
             onClick={() => setActiveTab('enquiries')}
-            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 ${
+            className={`pb-3 px-1 border-b-2 transition flex items-center gap-2 flex-shrink-0 ${
               activeTab === 'enquiries' ? 'border-rose-600 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -295,7 +295,112 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               ))}
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            {/* MOBILE CARD LIST VIEW (< md) */}
+            <div className="md:hidden space-y-3">
+              {filteredProperties.map(prop => (
+                <div key={prop.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="font-bold text-sm text-slate-900 truncate">
+                        {prop.title}
+                      </div>
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        {prop.locality}, Hyderabad • Ref: {prop.id}
+                        {prop.images && prop.images.length > 0 && ` • ${prop.images.length} photos`}
+                      </div>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase flex-shrink-0 ${
+                      prop.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
+                      prop.status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {prop.status}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+                    <div className="font-extrabold text-base text-slate-900">
+                      {formatIndianPrice(prop.price, prop.listing_type === 'rent')}
+                      <span className="text-[10px] text-rose-600 font-bold uppercase ml-1.5">({prop.listing_type})</span>
+                    </div>
+
+                    {prop.source_type === 'site_owner' && (
+                      <span className="px-2 py-0.5 rounded text-[9px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+                        Owner Sourced
+                      </span>
+                    )}
+                  </div>
+
+                  {prop.rera_id && (
+                    <div className="text-[11px] text-emerald-800 bg-emerald-50 px-2 py-1 rounded font-mono">
+                      TGRERA: {prop.rera_id}
+                    </div>
+                  )}
+
+                  {/* Actions Bar */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
+                    <button
+                      onClick={() => onNavigate(`/property/${prop.slug}`)}
+                      className="p-2 text-slate-600 hover:text-slate-900 rounded-lg bg-slate-100 active:scale-95 transition"
+                      title="Preview Public Listing"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setPropertyToEdit(prop);
+                        setAdminModalOpen(true);
+                      }}
+                      className="px-3 py-1.5 text-xs text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg font-bold border border-rose-200 flex items-center gap-1 active:scale-95 transition"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleToggleVerified(prop.id, prop.is_verified)}
+                      className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition active:scale-95 ${
+                        prop.is_verified 
+                          ? 'bg-emerald-600 text-white' 
+                          : 'bg-slate-100 text-slate-600 hover:bg-emerald-100'
+                      }`}
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>{prop.is_verified ? 'Verified' : 'Verify'}</span>
+                    </button>
+
+                    {prop.status !== 'approved' && (
+                      <button
+                        onClick={() => handleApprove(prop.id)}
+                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg font-bold active:scale-95 transition"
+                      >
+                        Approve
+                      </button>
+                    )}
+
+                    {prop.status !== 'rejected' && (
+                      <button
+                        onClick={() => setRejectingId(prop.id)}
+                        className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs rounded-lg font-bold active:scale-95 transition"
+                      >
+                        Reject
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => handleDelete(prop.id)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg active:scale-95 transition ml-auto"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP TABLE VIEW (hidden on mobile, visible on md+) */}
+            <div className="hidden md:block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 border-b border-slate-200 font-bold text-slate-600 uppercase tracking-wider">
@@ -419,25 +524,32 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
             {/* Rejection Modal Dialog */}
             {rejectingId && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-                <div className="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3">
+              <div 
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                onClick={e => {
+                  if (e.target === e.currentTarget) setRejectingId(null);
+                }}
+              >
+                <div className="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3 shadow-2xl">
                   <h3 className="text-sm font-bold text-slate-900">Specify Rejection Reason</h3>
                   <textarea
                     rows={3}
                     value={rejectionReason}
                     onChange={e => setRejectionReason(e.target.value)}
-                    className="w-full p-2 text-xs rounded-xl border border-slate-300"
+                    className="w-full p-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none"
                   />
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 pt-1">
                     <button
+                      type="button"
                       onClick={() => setRejectingId(null)}
-                      className="px-3 py-1.5 text-xs text-slate-600"
+                      className="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100"
                     >
                       Cancel
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleReject(rejectingId)}
-                      className="px-4 py-1.5 bg-red-600 text-white text-xs font-bold rounded-xl"
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-sm transition active:scale-95"
                     >
                       Confirm Rejection
                     </button>
@@ -450,7 +562,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
         {/* TAB 2: REPORTS */}
         {activeTab === 'reports' && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
               Community Moderation Reports
             </h3>
@@ -458,7 +570,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               <div className="space-y-3">
                 {reports.map(rep => (
                   <div key={rep.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-1 text-xs">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-1">
                       <span className="font-bold text-rose-700">{rep.reason}</span>
                       <span className="text-[10px] text-slate-400">{formatRelativeDate(rep.created_at)}</span>
                     </div>
@@ -475,19 +587,19 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
         {/* TAB 3: ENQUIRIES */}
         {activeTab === 'enquiries' && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
               All Portal Buyer Leads
             </h3>
             <div className="space-y-3">
               {enquiries.map(enq => (
-                <div key={enq.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between text-xs">
-                  <div>
-                    <div className="font-bold text-slate-900">{enq.sender_name} ({enq.sender_phone})</div>
-                    <div className="text-slate-500">{enq.property_title || 'Property #' + enq.property_id}</div>
-                    <p className="text-slate-700 mt-1 italic">"{enq.message}"</p>
+                <div key={enq.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                  <div className="min-w-0">
+                    <div className="font-bold text-slate-900 truncate">{enq.sender_name} ({enq.sender_phone})</div>
+                    <div className="text-slate-500 truncate">{enq.property_title || 'Property #' + enq.property_id}</div>
+                    <p className="text-slate-700 mt-1 italic break-words">"{enq.message}"</p>
                   </div>
-                  <span className="text-[11px] text-slate-400">{formatRelativeDate(enq.created_at)}</span>
+                  <span className="text-[11px] text-slate-400 whitespace-nowrap self-start sm:self-auto">{formatRelativeDate(enq.created_at)}</span>
                 </div>
               ))}
             </div>

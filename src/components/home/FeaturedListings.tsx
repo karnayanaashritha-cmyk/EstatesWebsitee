@@ -42,10 +42,10 @@ export const FeaturedListings: React.FC<FeaturedListingsProps> = ({
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl border border-slate-200 shadow-sm self-start md:self-auto">
+          <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl border border-slate-200 shadow-sm self-start md:self-auto max-w-full overflow-x-auto scrollbar-none">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex-shrink-0 ${
                 activeTab === 'all'
                   ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -55,7 +55,7 @@ export const FeaturedListings: React.FC<FeaturedListingsProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('buy')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex-shrink-0 ${
                 activeTab === 'buy'
                   ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -65,7 +65,7 @@ export const FeaturedListings: React.FC<FeaturedListingsProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('rent')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex-shrink-0 ${
                 activeTab === 'rent'
                   ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -75,7 +75,7 @@ export const FeaturedListings: React.FC<FeaturedListingsProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('villa')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap flex-shrink-0 ${
                 activeTab === 'villa'
                   ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'

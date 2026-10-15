@@ -72,16 +72,20 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
     ? property.images.map(i => i.image_url) 
     : ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'];
 
-  // Keyboard navigation for lightbox
+  // Keyboard navigation & body scroll lock for lightbox
   useEffect(() => {
     if (!lightboxOpen) return;
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLightboxOpen(false);
       if (e.key === 'ArrowLeft') setActiveImageIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
       if (e.key === 'ArrowRight') setActiveImageIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [lightboxOpen, images.length]);
 
   // Direct Enquiry Form states on detail page
@@ -188,7 +192,7 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
     : null;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
+    <div className="min-h-screen bg-slate-50 pt-4 pb-28 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Top Navigation & Breadcrumbs */}
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
@@ -440,76 +444,76 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Configuration</span>
-                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
-                    <Bed className="w-4 h-4 text-rose-500" />
-                    <span>{property.bedrooms > 0 ? `${property.bedrooms} BHK` : property.property_type}</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 text-xs">
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Configuration</span>
+                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1 min-w-0">
+                    <Bed className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                    <span className="truncate">{property.bedrooms > 0 ? `${property.bedrooms} BHK` : property.property_type}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Super Built-up Area</span>
-                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
-                    <Maximize2 className="w-4 h-4 text-rose-500" />
-                    <span>{formatArea(property.area_sqft)}</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Super Built-up Area</span>
+                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1 min-w-0">
+                    <Maximize2 className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                    <span className="truncate">{formatArea(property.area_sqft)}</span>
                   </div>
                 </div>
 
                 {property.carpet_area_sqft ? (
-                  <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                    <span className="text-slate-500 font-semibold block">Carpet Area</span>
-                    <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
-                      <Expand className="w-4 h-4 text-rose-500" />
-                      <span>{formatArea(property.carpet_area_sqft)}</span>
+                  <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                    <span className="text-slate-500 font-semibold block truncate">Carpet Area</span>
+                    <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1 min-w-0">
+                      <Expand className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                      <span className="truncate">{formatArea(property.carpet_area_sqft)}</span>
                     </div>
                   </div>
                 ) : null}
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Bathrooms</span>
-                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
-                    <Bath className="w-4 h-4 text-rose-500" />
-                    <span>{property.bathrooms || '1'} Baths</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Bathrooms</span>
+                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1 min-w-0">
+                    <Bath className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                    <span className="truncate">{property.bathrooms || '1'} Baths</span>
                   </div>
                 </div>
 
                 {property.balconies !== undefined ? (
-                  <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                    <span className="text-slate-500 font-semibold block">Balconies</span>
-                    <span className="font-extrabold text-slate-900 text-sm">{property.balconies} Balcony</span>
+                  <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                    <span className="text-slate-500 font-semibold block truncate">Balconies</span>
+                    <span className="font-extrabold text-slate-900 text-sm truncate block">{property.balconies} Balcony</span>
                   </div>
                 ) : null}
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Facing Direction</span>
-                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
-                    <Compass className="w-4 h-4 text-rose-500" />
-                    <span>{property.facing || 'East'}</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Facing Direction</span>
+                  <div className="font-extrabold text-slate-900 text-sm flex items-center gap-1 min-w-0">
+                    <Compass className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                    <span className="truncate">{property.facing || 'East'}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Furnishing</span>
-                  <span className="font-extrabold text-slate-900 text-sm">{property.furnishing}</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Furnishing</span>
+                  <span className="font-extrabold text-slate-900 text-sm truncate block">{property.furnishing}</span>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Possession</span>
-                  <span className="font-extrabold text-slate-900 text-sm">{property.possession_status}</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Possession</span>
+                  <span className="font-extrabold text-slate-900 text-sm truncate block">{property.possession_status}</span>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Floor</span>
-                  <span className="font-extrabold text-slate-900 text-sm">
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Floor</span>
+                  <span className="font-extrabold text-slate-900 text-sm truncate block">
                     {property.floor_no !== undefined ? `${property.floor_no} of ${property.total_floors || '-'}` : 'Independent'}
                   </span>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-xl space-y-1">
-                  <span className="text-slate-500 font-semibold block">Age of Property</span>
-                  <span className="font-extrabold text-slate-900 text-sm">{property.age_of_property || 'Ready / New'}</span>
+                <div className="p-2.5 sm:p-3 bg-slate-50 rounded-xl space-y-1 min-w-0">
+                  <span className="text-slate-500 font-semibold block truncate">Age of Property</span>
+                  <span className="font-extrabold text-slate-900 text-sm truncate block">{property.age_of_property || 'Ready / New'}</span>
                 </div>
               </div>
             </div>
@@ -977,6 +981,57 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
           onNavigate={onNavigate}
         />
       )}
+
+      {/* MOBILE STICKY BOTTOM ACTION BAR (< lg) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3.5 py-2.5 shadow-2xl flex items-center justify-between gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))]">
+        <div className="min-w-0 pr-1">
+          <div className="text-base xs:text-lg font-extrabold text-slate-900 leading-tight truncate">
+            {formatIndianPrice(property.price, property.listing_type === 'rent')}
+          </div>
+          <div className="text-[10px] text-slate-500 font-medium truncate">
+            {property.bedrooms > 0 ? `${property.bedrooms} BHK` : property.property_type} • {property.locality}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {property.allow_whatsapp && property.contact_whatsapp && (
+            <button
+              type="button"
+              onClick={() => {
+                const cleanNumber = property.contact_whatsapp?.replace(/[^0-9]/g, '');
+                const msg = encodeURIComponent(
+                  `Hi ${property.contact_name}, I saw your property "${property.title}" in ${property.locality} on Hyderabad Heights (Ref: ${property.id}). I would like to schedule a visit.`
+                );
+                window.open(`https://wa.me/${cleanNumber}?text=${msg}`, '_blank');
+              }}
+              className="p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl border border-emerald-200 transition active:scale-95 flex items-center justify-center shadow-sm"
+              title="Chat on WhatsApp"
+              aria-label="Chat on WhatsApp"
+            >
+              <MessageSquare className="w-4 h-4 text-emerald-600" />
+            </button>
+          )}
+
+          {property.allow_phone && property.contact_phone && (
+            <a
+              href={`tel:${property.contact_phone}`}
+              className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl transition active:scale-95 flex items-center justify-center shadow-sm"
+              title="Call Contact"
+              aria-label="Call Contact"
+            >
+              <Phone className="w-4 h-4 text-slate-700" />
+            </a>
+          )}
+
+          <button
+            type="button"
+            onClick={() => onOpenEnquiryModal(property)}
+            className="px-3.5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md transition active:scale-95 flex items-center gap-1.5"
+          >
+            <span>Enquire / Visit</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

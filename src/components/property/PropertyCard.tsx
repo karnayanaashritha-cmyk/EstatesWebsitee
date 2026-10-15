@@ -168,7 +168,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
       <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
           {/* Price Header */}
-          <div className="flex items-baseline justify-between gap-2 mb-1.5">
+          <div className="flex flex-wrap items-baseline justify-between gap-1 sm:gap-2 mb-1.5">
             <div className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {formatIndianPrice(property.price, property.listing_type === 'rent')}
             </div>
@@ -185,27 +185,27 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </h3>
 
           {/* Key Specs Row */}
-          <div className="grid grid-cols-3 gap-2 py-3 my-2 border-y border-slate-100 text-xs text-slate-600">
+          <div className="grid grid-cols-3 gap-1 xs:gap-2 py-3 my-2 border-y border-slate-100 text-xs text-slate-600">
             {property.bedrooms > 0 ? (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                 <Bed className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <span className="font-semibold text-slate-800">{property.bedrooms}</span> BHK
+                <span className="truncate"><strong className="font-semibold text-slate-800">{property.bedrooms}</strong> BHK</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                 <Compass className="w-4 h-4 text-rose-500 flex-shrink-0" />
                 <span className="truncate">{property.facing || 'East'} Facing</span>
               </div>
             )}
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
               <Bath className="w-4 h-4 text-rose-500 flex-shrink-0" />
-              <span className="font-semibold text-slate-800">{property.bathrooms || 1}</span> Baths
+              <span className="truncate"><strong className="font-semibold text-slate-800">{property.bathrooms || 1}</strong> Baths</span>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
               <Maximize2 className="w-4 h-4 text-rose-500 flex-shrink-0" />
-              <span className="truncate font-semibold text-slate-800">{property.area_sqft}</span> sqft
+              <span className="truncate font-semibold text-slate-800">{property.area_sqft} <span className="font-normal text-slate-500">sqft</span></span>
             </div>
           </div>
 
@@ -219,16 +219,16 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
 
         {/* Contact and Enquiry Actions */}
-        <div className="pt-2 flex items-center gap-2">
+        <div className="pt-2 flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2">
           {/* Owner Privacy Respect: Show WhatsApp only if allowed */}
           {property.allow_whatsapp && property.contact_whatsapp ? (
             <button
               type="button"
               onClick={handleWhatsApp}
-              className="flex-1 py-2 px-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 transition flex items-center justify-center gap-1.5"
+              className="flex-1 min-w-[85px] py-2 px-2 xs:px-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 transition flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-              <span>WhatsApp</span>
+              <MessageSquare className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+              <span className="truncate">WhatsApp</span>
             </button>
           ) : null}
 
@@ -237,7 +237,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             <button
               type="button"
               onClick={handleCall}
-              className="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1"
+              className="py-2 px-2.5 xs:px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 active:scale-95 flex-shrink-0"
             >
               <Phone className="w-3.5 h-3.5 text-slate-600" />
               <span>Call</span>
@@ -251,7 +251,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               e.stopPropagation();
               onOpenEnquiryModal(property);
             }}
-            className="flex-1 py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 shadow-sm"
+            className="flex-1 min-w-[75px] py-2 px-2.5 xs:px-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 shadow-sm active:scale-95"
           >
             <span>Enquire</span>
           </button>

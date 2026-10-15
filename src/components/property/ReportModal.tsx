@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Property } from '../../types';
 import { EnquiryService } from '../../services/enquiryService';
 import { X, AlertTriangle, CheckCircle2 } from 'lucide-react';
@@ -14,6 +14,23 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   isOpen,
   onClose
 }) => {
+  // Lock background scroll & handle Escape key
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen || !property) return null;
 
   const [email, setEmail] = useState('');
@@ -51,10 +68,18 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      onClick={e => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Report Listing"
+    >
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)]">
         {/* Header */}
-        <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+        <div className="p-4 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-amber-400" />
             <h2 className="text-base font-bold">Report Listing to Admin</h2>
@@ -67,7 +92,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
           </button>
         </div>
 
-        <div className="p-5">
+        <div className="p-4 sm:p-5 overflow-y-auto flex-1">
           {isSuccess ? (
             <div className="text-center py-4 space-y-3">
               <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />

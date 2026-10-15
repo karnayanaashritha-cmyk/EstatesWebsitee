@@ -30,14 +30,14 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div className="min-h-screen bg-slate-50 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center max-w-xl mx-auto space-y-2">
           <span className="text-xs font-bold text-rose-600 uppercase tracking-widest">
             Support & Inquiries
           </span>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl xs:text-3xl font-extrabold text-slate-900 tracking-tight">
             Contact Hyderabad Heights
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -97,7 +97,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Form */}
-          <div className="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+          <div className="lg:col-span-2 bg-white rounded-3xl p-5 xs:p-6 sm:p-8 border border-slate-200 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-4">
               Send us a Message
             </h2>
