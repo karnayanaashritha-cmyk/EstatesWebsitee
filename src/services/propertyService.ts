@@ -36,12 +36,31 @@ export class PropertyService {
           .select('*, property_images(*)')
           .eq('status', 'approved');
 
-        if (filters.locality && filters.locality !== 'all') {
-          query = query.ilike('locality', `%${filters.locality}%`);
+        // Location / Localities filter
+        const activeLocalities = (filters.localities && filters.localities.length > 0)
+          ? filters.localities
+          : (filters.locality && filters.locality !== 'all' ? [filters.locality] : []);
+
+        if (activeLocalities.length > 0) {
+          const conditions = activeLocalities
+            .map(loc => `locality.ilike."%${loc}%",city.ilike."%${loc}%",landmark.ilike."%${loc}%",title.ilike."%${loc}%"`)
+            .join(',');
+          query = query.or(conditions);
         }
 
-        if (filters.propertyType && filters.propertyType !== 'all') {
-          query = query.eq('property_type', filters.propertyType);
+        // Property Types filter
+        const activePropertyTypes = (filters.propertyTypes && filters.propertyTypes.length > 0)
+          ? filters.propertyTypes
+          : (filters.propertyType && filters.propertyType !== 'all' ? [filters.propertyType] : []);
+
+        if (activePropertyTypes.length > 0) {
+          const mappedTypes = Array.from(new Set(activePropertyTypes.map(t => {
+            if (t === 'flat') return 'apartment';
+            if (t === 'land') return 'plot';
+            if (t === 'office' || t === 'shop') return 'commercial';
+            return t;
+          })));
+          query = query.in('property_type', mappedTypes);
         }
 
         if (filters.listingType && filters.listingType !== 'all') {
@@ -94,7 +113,11 @@ export class PropertyService {
         }
 
         const { data, error } = await query;
-        if (!error && data) {
+        if (error) {
+          console.error('Supabase property query failed:', error);
+          throw new Error(error.message || 'Database search request failed.');
+        }
+        if (data) {
           const properties = data.map((item: any) => ({
             ...item,
             images: item.property_images || []
@@ -108,8 +131,9 @@ export class PropertyService {
               .some(value => String(value).toLowerCase().includes(queryText))
           );
         }
-      } catch (err) {
-        console.warn('Supabase query error, falling back to local database store:', err);
+      } catch (err: any) {
+        console.error('Database query error:', err);
+        throw err;
       }
     }
 
@@ -126,12 +150,60 @@ export class PropertyService {
       );
     }
 
-    if (filters.locality && filters.locality !== 'all') {
-      properties = properties.filter(p => p.locality.toLowerCase() === filters.locality?.toLowerCase());
+    // Location / Localities filter
+    const activeLocalities = (filters.localities && filters.localities.length > 0)
+      ? filters.localities
+      : (filters.locality && filters.locality !== 'all' ? [filters.locality] : []);
+
+    if (activeLocalities.length > 0) {
+      properties = properties.filter(p => {
+        return activeLocalities.some(loc => {
+          const l = loc.toLowerCase().trim();
+          if (!l) return true;
+          return (
+            (p.locality && p.locality.toLowerCase().includes(l)) ||
+            (p.city && p.city.toLowerCase().includes(l)) ||
+            (p.address && p.address.toLowerCase().includes(l)) ||
+            (p.landmark && p.landmark.toLowerCase().includes(l)) ||
+            (p.title && p.title.toLowerCase().includes(l))
+          );
+        });
+      });
     }
 
-    if (filters.propertyType && filters.propertyType !== 'all') {
-      properties = properties.filter(p => p.property_type === filters.propertyType);
+    // Property Types filter
+    const activePropertyTypes = (filters.propertyTypes && filters.propertyTypes.length > 0)
+      ? filters.propertyTypes
+      : (filters.propertyType && filters.propertyType !== 'all' ? [filters.propertyType] : []);
+
+    if (activePropertyTypes.length > 0) {
+      properties = properties.filter(p => {
+        return activePropertyTypes.some(type => {
+          const t = type.toLowerCase().trim();
+          if (t === 'flat' || t === 'apartment') {
+            return p.property_type === 'apartment';
+          }
+          if (t === 'house' || t === 'independent house') {
+            return p.property_type === 'house' || p.title.toLowerCase().includes('house') || p.title.toLowerCase().includes('independent');
+          }
+          if (t === 'villa') {
+            return p.property_type === 'villa';
+          }
+          if (t === 'plot' || t === 'land') {
+            return p.property_type === 'plot';
+          }
+          if (t === 'commercial' || t === 'office' || t === 'shop' || t === 'retail') {
+            return (
+              p.property_type === 'commercial' ||
+              p.title.toLowerCase().includes('office') ||
+              p.title.toLowerCase().includes('commercial') ||
+              p.title.toLowerCase().includes('retail') ||
+              p.title.toLowerCase().includes('shop')
+            );
+          }
+          return p.property_type === t;
+        });
+      });
     }
 
     if (filters.listingType && filters.listingType !== 'all') {

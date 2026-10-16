@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { Search, TrendingUp } from 'lucide-react';
-import { PROPERTY_TYPES } from '../../types';
-import { LocalitySelect } from '../common/LocalitySelect';
-import { AreaRangeSelect } from '../common/AreaRangeSelect';
+import React from 'react';
+import { TrendingUp } from 'lucide-react';
+import { PropertySearchBar } from '../common/PropertySearchBar';
 
 interface HeroSectionProps {
   onNavigate: (path: string, params?: any) => void;
@@ -10,22 +8,6 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListingsCount = 0 }) => {
-  const [selectedLocality, setSelectedLocality] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedMinArea, setSelectedMinArea] = useState<number | undefined>();
-  const [selectedMaxArea, setSelectedMaxArea] = useState<number | undefined>();
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearchSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    onNavigate('/search', {
-      searchQuery,
-      locality: selectedLocality,
-      propertyType: selectedCategory,
-      minArea: selectedMinArea,
-      maxArea: selectedMaxArea,
-    });
-  };
 
   const trendingLocalities = ['Kokapet', 'Gachibowli', 'Tellapur', 'Narsingi', 'Miyapur', 'Financial District', 'Manikonda', 'Kukatpally'];
 
@@ -34,11 +16,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
       <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(#b69b7a_1px,transparent_1px)] [background-size:24px_24px]" />
       <div className="absolute -top-32 -right-20 w-[34rem] h-[34rem] rounded-full bg-amber-100/50 blur-3xl pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
-        {/* Navy & Gold Hero Card Container */}
-        <div className="relative overflow-hidden bg-[#102D47] rounded-2xl sm:rounded-3xl p-5 xs:p-6 sm:p-10 md:p-12 lg:p-14 shadow-2xl shadow-[#102D47]/20 border border-[#52697D]/30 max-w-5xl mx-auto">
+        {/* White Hero Card Container */}
+        <div className="relative overflow-hidden bg-white rounded-2xl sm:rounded-3xl p-5 xs:p-6 sm:p-10 md:p-12 lg:p-14 shadow-2xl shadow-slate-200/50 border border-slate-200 max-w-5xl mx-auto">
           {/* Subtle ambient lighting */}
-          <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#DDB86F]/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+          <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-red-500/5 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-slate-100/50 blur-3xl" />
 
           {/* Brand section */}
           <div className="relative z-10 flex items-center gap-3 sm:gap-4">
@@ -57,25 +39,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
             {/* Brand text */}
             <div className="flex flex-col justify-center min-w-0">
               <div className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold tracking-wider leading-none">
-                <span className="text-white">HYDERABAD </span>
-                <span className="text-[#DDB86F]">HEIGHTS</span>
+                <span className="text-[#102D47]">HYDERABAD </span>
+                <span className="text-[#E8193C]">HEIGHTS</span>
               </div>
-              <span className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-[#D6DFE8] mt-1 sm:mt-1.5 uppercase leading-none truncate">
+              <span className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-slate-500 mt-1 sm:mt-1.5 uppercase leading-none truncate">
                 YOUR HOME. YOUR FUTURE.
               </span>
             </div>
           </div>
 
           {/* Thin subtle horizontal divider */}
-          <div className="relative z-10 w-full h-px bg-[#52697D] my-4 sm:my-8 opacity-70" />
+          <div className="relative z-10 w-full h-px bg-slate-200 my-4 sm:my-8" />
 
           {/* Main heading */}
-          <h1 className="relative z-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.18] max-w-2xl">
+          <h1 className="relative z-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-[#102D47] tracking-tight leading-[1.18] max-w-2xl">
             Find Your Dream Home in Hyderabad
           </h1>
 
           {/* Subtitle */}
-          <p className="relative z-10 mt-2.5 sm:mt-4 text-xs xs:text-sm sm:text-base md:text-lg text-[#D6DFE8] font-normal leading-relaxed">
+          <p className="relative z-10 mt-2.5 sm:mt-4 text-xs xs:text-sm sm:text-base md:text-lg text-slate-600 font-normal leading-relaxed">
             Buy · Rent · Sell — Flats, Villas & Plots
           </p>
 
@@ -85,7 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               id="hero-buy-btn"
               type="button"
               onClick={() => onNavigate('/search', { listingType: 'buy' })}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-100 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-50 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
             >
               Buy Property
             </button>
@@ -93,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               id="hero-rent-btn"
               type="button"
               onClick={() => onNavigate('/search', { listingType: 'rent' })}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-100 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-50 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
             >
               Rent Property
             </button>
@@ -101,32 +83,43 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               id="hero-list-btn"
               type="button"
               onClick={() => onNavigate('/submit-property')}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-[#DDB86F] hover:bg-[#d4ad62] text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#DDB86F]"
+              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-[#E8193C] hover:bg-[#d01535] text-white font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E8193C]"
             >
               List Property
             </button>
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-5xl mx-auto mt-6 sm:mt-10 bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-stone-200 p-3 sm:p-4">
-          <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            <div className="sm:col-span-3 relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-              <input type="text" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} placeholder="Society, project, or title..." className="w-full pl-10 pr-3 py-3 bg-stone-50 hover:bg-white focus:bg-white text-sm rounded-xl border border-stone-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none transition" />
-            </div>
-            <div className="sm:col-span-3"><LocalitySelect value={selectedLocality} onChange={setSelectedLocality} placeholder="Select Locality" /></div>
-            <div className="sm:col-span-3"><AreaRangeSelect minArea={selectedMinArea} maxArea={selectedMaxArea} onChange={(min, max) => { setSelectedMinArea(min); setSelectedMaxArea(max); }} /></div>
-            <div className="sm:col-span-3 flex gap-2">
-              <select value={selectedCategory} onChange={event => setSelectedCategory(event.target.value)} className="min-w-0 flex-1 px-3 py-3 bg-stone-50 text-xs sm:text-sm rounded-xl border border-stone-200 focus:border-rose-500 outline-none truncate font-medium text-slate-700">
-                <option value="">All Categories</option>{PROPERTY_TYPES.map(type => <option key={type.id} value={type.id}>{type.label}</option>)}
-              </select>
-              <button type="submit" className="py-3 px-5 bg-slate-900 hover:bg-rose-800 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5 flex-shrink-0"><Search className="w-4 h-4" /><span>Find</span></button>
-            </div>
-          </form>
-          <div className="mt-3 pt-3 border-t border-stone-100 flex items-center gap-1.5 text-xs overflow-x-auto scrollbar-none pb-1">
-            <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1 flex-shrink-0"><TrendingUp className="w-3.5 h-3.5 text-rose-600" /> Popular:</span>
-            {trendingLocalities.map(locality => <button key={locality} onClick={() => onNavigate('/search', { locality })} className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-rose-100/70 hover:text-rose-700 text-slate-700 font-medium transition whitespace-nowrap flex-shrink-0">{locality}</button>)}
+        {/* Modern Property Search Bar (Matches Reference Layout) */}
+        <div className="relative max-w-5xl mx-auto mt-6 sm:mt-10 overflow-visible z-30">
+          <PropertySearchBar
+            onSearch={criteria => {
+              onNavigate('/search', {
+                localities: criteria.locations,
+                locality: criteria.locations[0] || '',
+                propertyTypes: criteria.propertyTypes,
+                propertyType: criteria.propertyTypes[0] || 'all',
+                minPrice: criteria.minPrice,
+                maxPrice: criteria.maxPrice,
+              });
+            }}
+          />
+
+          {/* Quick Trending Corridors */}
+          <div className="mt-3.5 px-2 sm:px-3 flex items-center gap-1.5 text-xs overflow-x-auto scrollbar-none pb-1">
+            <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1 flex-shrink-0">
+              <TrendingUp className="w-3.5 h-3.5 text-red-600" /> Popular:
+            </span>
+            {trendingLocalities.map(locality => (
+              <button
+                key={locality}
+                type="button"
+                onClick={() => onNavigate('/search', { localities: [locality], locality })}
+                className="px-2.5 py-1 rounded-full bg-white/90 hover:bg-red-50 hover:text-red-700 text-slate-700 font-medium transition border border-slate-200/80 shadow-xs whitespace-nowrap flex-shrink-0"
+              >
+                {locality}
+              </button>
+            ))}
           </div>
         </div>
 

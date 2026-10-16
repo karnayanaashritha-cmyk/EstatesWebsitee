@@ -102,7 +102,9 @@ export interface PropertyReport {
 export interface PropertyFilterParams {
   searchQuery?: string;
   locality?: string;
+  localities?: string[];
   propertyType?: string;
+  propertyTypes?: string[];
   listingType?: ListingType | 'all';
   minPrice?: number;
   maxPrice?: number;

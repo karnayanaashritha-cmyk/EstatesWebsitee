@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyFilterParams, HYDERABAD_LOCALITIES, PROPERTY_TYPES } from '../types';
 import { PropertyService } from '../services/propertyService';
 import { PropertyCard } from '../components/property/PropertyCard';
@@ -20,6 +20,8 @@ import {
   CheckCircle2,
   Maximize2
 } from 'lucide-react';
+import { PropertySearchBar } from '../components/common/PropertySearchBar';
+import { filtersToQueryParams, queryParamsToFilters } from '../utils/searchParams';
 
 
 interface SearchPageProps {
@@ -33,32 +35,68 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   onNavigate,
   onOpenEnquiryModal
 }) => {
-  const [filters, setFilters] = useState<PropertyFilterParams>({
-    searchQuery: '',
-    locality: '',
-    propertyType: 'all',
-    listingType: 'all',
-    bedrooms: 'all',
-    furnishing: 'all',
-    minPrice: 0,
-    maxPrice: 0,
-    reraOnly: false,
-    verifiedOnly: false,
-    sortBy: 'newest',
-    ...initialFilters
+  const [filters, setFilters] = useState<PropertyFilterParams>(() => {
+    const urlParams = typeof window !== 'undefined' && window.location.search
+      ? queryParamsToFilters(window.location.search)
+      : {};
+
+    const initial: PropertyFilterParams = {
+      searchQuery: '',
+      locality: '',
+      localities: [],
+      propertyType: 'all',
+      propertyTypes: [],
+      listingType: 'all',
+      bedrooms: 'all',
+      furnishing: 'all',
+      minPrice: 0,
+      maxPrice: 0,
+      reraOnly: false,
+      verifiedOnly: false,
+      sortBy: 'newest',
+      ...urlParams,
+      ...initialFilters
+    };
+
+    // Ensure localities array is populated if locality string provided
+    if (initial.locality && (!initial.localities || initial.localities.length === 0)) {
+      initial.localities = [initial.locality];
+    }
+    // Ensure propertyTypes array is populated if propertyType provided
+    if (initial.propertyType && initial.propertyType !== 'all' && (!initial.propertyTypes || initial.propertyTypes.length === 0)) {
+      initial.propertyTypes = [initial.propertyType];
+    }
+
+    return initial;
   });
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const currentRequestId = useRef(0);
 
   useEffect(() => {
     // Sync if initialFilters change from navigation
     if (Object.keys(initialFilters).length > 0) {
-      setFilters(prev => ({ ...prev, ...initialFilters }));
+      setFilters(prev => ({
+        ...prev,
+        ...initialFilters,
+        localities: initialFilters.localities || (initialFilters.locality ? [initialFilters.locality] : prev.localities),
+        propertyTypes: initialFilters.propertyTypes || (initialFilters.propertyType && initialFilters.propertyType !== 'all' ? [initialFilters.propertyType] : prev.propertyTypes)
+      }));
     }
   }, [initialFilters]);
+
+  // Synchronize URL query parameters for bookmarking & shareability
+  useEffect(() => {
+    const queryString = filtersToQueryParams(filters);
+    const newPath = queryString ? `/search?${queryString}` : '/search';
+    if (window.location.pathname === '/search' && window.location.search.replace(/^\?/, '') !== queryString) {
+      window.history.replaceState({}, '', newPath);
+    }
+  }, [filters]);
 
   useEffect(() => {
     loadProperties();
@@ -82,14 +120,24 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   }, [mobileFilterOpen]);
 
   const loadProperties = async () => {
+    const reqId = ++currentRequestId.current;
     setLoading(true);
+    setError(null);
     try {
       const data = await PropertyService.getPublicProperties(filters);
-      setProperties(data);
-    } catch (err) {
-      console.error('Error fetching public properties:', err);
+      if (reqId === currentRequestId.current) {
+        setProperties(data);
+      }
+    } catch (err: any) {
+      if (reqId === currentRequestId.current) {
+        console.error('Error fetching public properties:', err);
+        setError(err.message || 'Unable to connect to the database. Please try again.');
+        setProperties([]);
+      }
     } finally {
-      setLoading(false);
+      if (reqId === currentRequestId.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -97,7 +145,9 @@ export const SearchPage: React.FC<SearchPageProps> = ({
     setFilters({
       searchQuery: '',
       locality: '',
+      localities: [],
       propertyType: 'all',
+      propertyTypes: [],
       listingType: 'all',
       bedrooms: 'all',
       furnishing: 'all',
@@ -112,15 +162,23 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   };
 
   const handleLocalitySelect = (loc: string) => {
-    setFilters(prev => ({
-      ...prev,
-      locality: prev.locality === loc ? '' : loc
-    }));
+    setFilters(prev => {
+      const currentLocs = prev.localities || (prev.locality ? [prev.locality] : []);
+      const exists = currentLocs.some(l => l.toLowerCase() === loc.toLowerCase());
+      const nextLocs = exists 
+        ? currentLocs.filter(l => l.toLowerCase() !== loc.toLowerCase()) 
+        : [...currentLocs, loc];
+      return {
+        ...prev,
+        localities: nextLocs,
+        locality: nextLocs[0] || ''
+      };
+    });
   };
 
   const activeFiltersCount = [
-    filters.locality && filters.locality !== 'all',
-    filters.propertyType && filters.propertyType !== 'all',
+    (filters.localities && filters.localities.length > 0) || (filters.locality && filters.locality !== 'all'),
+    (filters.propertyTypes && filters.propertyTypes.length > 0) || (filters.propertyType && filters.propertyType !== 'all'),
     filters.listingType && filters.listingType !== 'all',
     filters.bedrooms && filters.bedrooms !== 'all',
     filters.furnishing && filters.furnishing !== 'all',
@@ -182,102 +240,67 @@ export const SearchPage: React.FC<SearchPageProps> = ({
           </div>
         </div>
 
-        {/* Search Bar & Quick Filters Bar */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mb-6 space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-            {/* Search Input */}
-            <div className="sm:col-span-3 relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-              <input
-                type="text"
-                value={filters.searchQuery || ''}
-                onChange={e => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-                placeholder="Search society, project, keyword..."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none"
-              />
-            </div>
+        {/* Modern Property Search Bar (Matches Reference Design) */}
+        <div className="mb-6 space-y-3">
+          <PropertySearchBar
+            initialLocations={filters.localities && filters.localities.length > 0 ? filters.localities : (filters.locality ? [filters.locality] : [])}
+            initialPropertyTypes={filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes : (filters.propertyType && filters.propertyType !== 'all' ? [filters.propertyType] : [])}
+            initialMinPrice={filters.minPrice}
+            initialMaxPrice={filters.maxPrice}
+            onSearch={criteria => {
+              setFilters(prev => ({
+                ...prev,
+                localities: criteria.locations,
+                locality: criteria.locations[0] || '',
+                propertyTypes: criteria.propertyTypes,
+                propertyType: criteria.propertyTypes[0] || 'all',
+                minPrice: criteria.minPrice || 0,
+                maxPrice: criteria.maxPrice || 0,
+              }));
+            }}
+          />
 
-            {/* Searchable Locality Selector */}
-            <div className="sm:col-span-3">
-              <LocalitySelect
-                value={filters.locality || ''}
-                onChange={loc => setFilters(prev => ({ ...prev, locality: loc }))}
-                placeholder="Search Locality..."
-              />
-            </div>
-
-            {/* Space Range in Sq.Ft */}
-            <div className="sm:col-span-2">
-              <AreaRangeSelect
-                minArea={filters.minArea}
-                maxArea={filters.maxArea}
-                onChange={(min, max) => setFilters(prev => ({ ...prev, minArea: min, maxArea: max }))}
-              />
-            </div>
-
-            {/* Budget / Price Range */}
-            <div className="sm:col-span-2">
-              <BudgetRangeSelect
-                minPrice={filters.minPrice}
-                maxPrice={filters.maxPrice}
-                isRental={filters.listingType === 'rent'}
-                onChange={(min, max) => setFilters(prev => ({ ...prev, minPrice: min, maxPrice: max }))}
-              />
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="sm:col-span-2">
-              <select
-                value={filters.sortBy || 'newest'}
-                onChange={e => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
-                className="w-full px-3 py-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:border-rose-500 outline-none cursor-pointer"
-              >
-                <option value="newest">Sort: Newest</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="area_desc">Area: Largest</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Listing Type Radio Pills & Popular Localities */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100">
+          {/* Quick Filters Toolbar: Listing Type + Quick Locality Chips */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-3.5 py-2.5 bg-white rounded-2xl border border-slate-200/90 shadow-xs">
             {/* Listing Type Radio Pills */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start max-w-full overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-xl self-start max-w-full overflow-x-auto scrollbar-none">
               {(['all', 'buy', 'rent', 'lease'] as const).map(type => (
                 <button
                   key={type}
                   onClick={() => setFilters(prev => ({ ...prev, listingType: type }))}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition whitespace-nowrap flex-shrink-0 ${
                     filters.listingType === type
-                      ? 'bg-rose-600 text-white shadow-sm'
+                      ? 'bg-red-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  {type === 'all' ? 'All Types' : type === 'buy' ? 'Buy' : type === 'rent' ? 'Rent' : 'Lease'}
+                  {type === 'all' ? 'All Listings' : type === 'buy' ? 'Buy' : type === 'rent' ? 'Rent' : 'Lease'}
                 </button>
               ))}
             </div>
 
             {/* Quick Locality chips */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-xs scrollbar-none">
               <span className="text-slate-400 font-semibold flex items-center gap-1 flex-shrink-0 mr-1 text-[11px]">
-                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                <MapPin className="w-3.5 h-3.5 text-red-500" />
                 Quick:
               </span>
-              {HYDERABAD_LOCALITIES.slice(0, 8).map(loc => (
-                <button
-                  key={loc}
-                  onClick={() => handleLocalitySelect(loc)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition flex-shrink-0 ${
-                    filters.locality === loc
-                      ? 'bg-rose-600 text-white font-bold'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {loc}
-                </button>
-              ))}
+              {HYDERABAD_LOCALITIES.slice(0, 8).map(loc => {
+                const isSelected = (filters.localities && filters.localities.includes(loc)) || filters.locality === loc;
+                return (
+                  <button
+                    key={loc}
+                    onClick={() => handleLocalitySelect(loc)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition flex-shrink-0 ${
+                      isSelected
+                        ? 'bg-red-600 text-white font-bold'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                  >
+                    {loc}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -310,7 +333,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                 </label>
                 <LocalitySelect
                   value={filters.locality || ''}
-                  onChange={loc => setFilters(prev => ({ ...prev, locality: loc }))}
+                  onChange={loc => setFilters(prev => ({ ...prev, locality: loc, localities: loc ? [loc] : [] }))}
                   placeholder="Select or Search Area..."
                 />
               </div>
@@ -350,24 +373,27 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                     <input
                       type="radio"
                       name="prop_category"
-                      checked={!filters.propertyType || filters.propertyType === 'all'}
-                      onChange={() => setFilters(prev => ({ ...prev, propertyType: 'all' }))}
-                      className="text-rose-600 focus:ring-rose-500"
+                      checked={(!filters.propertyTypes || filters.propertyTypes.length === 0) && (!filters.propertyType || filters.propertyType === 'all')}
+                      onChange={() => setFilters(prev => ({ ...prev, propertyType: 'all', propertyTypes: [] }))}
+                      className="text-red-600 focus:ring-red-500"
                     />
                     <span>All Categories</span>
                   </label>
-                  {PROPERTY_TYPES.map(cat => (
-                    <label key={cat.id} className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="prop_category"
-                        checked={filters.propertyType === cat.id}
-                        onChange={() => setFilters(prev => ({ ...prev, propertyType: cat.id }))}
-                        className="text-rose-600 focus:ring-rose-500"
-                      />
-                      <span>{cat.label}</span>
-                    </label>
-                  ))}
+                  {PROPERTY_TYPES.map(cat => {
+                    const isChecked = (filters.propertyTypes && filters.propertyTypes.includes(cat.id)) || filters.propertyType === cat.id;
+                    return (
+                      <label key={cat.id} className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="prop_category"
+                          checked={isChecked}
+                          onChange={() => setFilters(prev => ({ ...prev, propertyType: cat.id, propertyTypes: [cat.id] }))}
+                          className="text-red-600 focus:ring-red-500"
+                        />
+                        <span>{cat.label}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -451,12 +477,55 @@ export const SearchPage: React.FC<SearchPageProps> = ({
 
               {activeFiltersCount > 0 && (
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  {filters.locality && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-200">
+                  {/* Multi-location badges */}
+                  {filters.localities && filters.localities.length > 0 ? (
+                    filters.localities.map(loc => (
+                      <span key={loc} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 font-semibold border border-red-200 animate-fadeIn">
+                        📍 {loc}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-red-900" 
+                          onClick={() => setFilters(p => {
+                            const remaining = (p.localities || []).filter(l => l !== loc);
+                            return {
+                              ...p,
+                              localities: remaining,
+                              locality: remaining[0] || ''
+                            };
+                          })} 
+                        />
+                      </span>
+                    ))
+                  ) : filters.locality && filters.locality !== 'all' ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 font-semibold border border-red-200 animate-fadeIn">
                       📍 {filters.locality}
-                      <X className="w-3 h-3 cursor-pointer hover:text-rose-900" onClick={() => setFilters(p => ({ ...p, locality: '' }))} />
+                      <X className="w-3 h-3 cursor-pointer hover:text-red-900" onClick={() => setFilters(p => ({ ...p, locality: '', localities: [] }))} />
                     </span>
-                  )}
+                  ) : null}
+
+                  {/* Multi-Property Type badges */}
+                  {filters.propertyTypes && filters.propertyTypes.length > 0 ? (
+                    filters.propertyTypes.map(t => (
+                      <span key={t} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 font-semibold border border-red-200 capitalize animate-fadeIn">
+                        🏢 {t}
+                        <X 
+                          className="w-3 h-3 cursor-pointer hover:text-red-900" 
+                          onClick={() => setFilters(p => {
+                            const remaining = (p.propertyTypes || []).filter(item => item !== t);
+                            return {
+                              ...p,
+                              propertyTypes: remaining,
+                              propertyType: remaining[0] || 'all'
+                            };
+                          })} 
+                        />
+                      </span>
+                    ))
+                  ) : filters.propertyType && filters.propertyType !== 'all' ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 font-semibold border border-red-200 capitalize animate-fadeIn">
+                      🏢 {filters.propertyType}
+                      <X className="w-3 h-3 cursor-pointer hover:text-red-900" onClick={() => setFilters(p => ({ ...p, propertyType: 'all', propertyTypes: [] }))} />
+                    </span>
+                  ) : null}
                   {(filters.minArea || filters.maxArea) && (
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-200">
                       📐 {filters.minArea || 0} – {filters.maxArea || '∞'} sq.ft
@@ -479,12 +548,6 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-200 capitalize">
                       🏷️ {filters.listingType}
                       <X className="w-3 h-3 cursor-pointer hover:text-rose-900" onClick={() => setFilters(p => ({ ...p, listingType: 'all' }))} />
-                    </span>
-                  )}
-                  {filters.propertyType && filters.propertyType !== 'all' && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-200 capitalize">
-                      🏢 {filters.propertyType}
-                      <X className="w-3 h-3 cursor-pointer hover:text-rose-900" onClick={() => setFilters(p => ({ ...p, propertyType: 'all' }))} />
                     </span>
                   )}
                   {filters.reraOnly && (
@@ -510,8 +573,35 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             </div>
 
 
-            {/* Results Grid / List */}
-            {loading ? (
+            {/* Results Grid / List / Error / Empty States */}
+            {error ? (
+              /* Database Failure / Error State */
+              <div className="bg-white rounded-2xl p-10 text-center border border-red-200 shadow-sm space-y-4">
+                <div className="w-14 h-14 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto">
+                  <ShieldCheck className="w-7 h-7 text-red-500" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900">
+                  Search Request Failed
+                </h3>
+                <p className="text-xs sm:text-sm text-red-600 max-w-md mx-auto">
+                  {error}
+                </p>
+                <div className="pt-2 flex justify-center gap-3">
+                  <button
+                    onClick={() => { setError(null); loadProperties(); }}
+                    className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  >
+                    Retry Search
+                  </button>
+                  <button
+                    onClick={handleResetFilters}
+                    className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
+            ) : loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[1, 2, 3, 4].map(n => (
                   <div key={n} className="bg-white rounded-2xl h-80 animate-pulse border border-slate-200 p-4 space-y-3">
@@ -536,19 +626,21 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             ) : (
               /* Empty State */
               <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto">
                   <Home className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">
                   No Properties Found
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-                  We could not find any active listings matching your current filter criteria. Try adjusting your locality, budget, or category.
+                  {filters.localities && filters.localities.length > 0
+                    ? `We could not find any active listings in ${filters.localities.join(', ')} matching your current filter criteria.`
+                    : 'We could not find any active listings matching your current filter criteria.'} Try adjusting your locality, budget, or category.
                 </p>
                 <div className="pt-2">
                   <button
                     onClick={handleResetFilters}
-                    className="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition shadow-sm"
+                    className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow-sm"
                   >
                     Reset All Filters
                   </button>
@@ -595,8 +687,12 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                   Hyderabad Locality
                 </label>
                 <LocalitySelect
-                  value={filters.locality || ''}
-                  onChange={loc => setFilters(p => ({ ...p, locality: loc }))}
+                  value={filters.locality || (filters.localities && filters.localities.length === 1 ? filters.localities[0] : '')}
+                  onChange={loc => setFilters(p => ({
+                    ...p,
+                    locality: loc,
+                    localities: loc ? [loc] : []
+                  }))}
                   placeholder="Select or Search Area..."
                 />
               </div>
@@ -630,8 +726,15 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category</label>
                 <select
-                  value={filters.propertyType || 'all'}
-                  onChange={e => setFilters(p => ({ ...p, propertyType: e.target.value }))}
+                  value={filters.propertyType || (filters.propertyTypes && filters.propertyTypes.length === 1 ? filters.propertyTypes[0] : 'all')}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setFilters(p => ({
+                      ...p,
+                      propertyType: val,
+                      propertyTypes: val === 'all' ? [] : [val]
+                    }));
+                  }}
                   className="w-full p-2.5 text-xs rounded-xl border border-slate-200 bg-slate-50 font-medium"
                 >
                   <option value="all">All Categories</option>

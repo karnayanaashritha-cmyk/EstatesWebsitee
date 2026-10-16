@@ -16,10 +16,16 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
+import { filtersToQueryParams, queryParamsToFilters } from './utils/searchParams';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname || '/');
-  const [routeParams, setRouteParams] = useState<any>({});
+  const [routeParams, setRouteParams] = useState<any>(() => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/search' && window.location.search) {
+      return queryParamsToFilters(window.location.search);
+    }
+    return {};
+  });
   const [supabaseModalOpen, setSupabaseModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [enquiryModalProperty, setEnquiryModalProperty] = useState<Property | null>(null);
@@ -27,17 +33,29 @@ export function App() {
   // Sync with browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-      setRouteParams({});
+      const pathname = window.location.pathname;
+      setCurrentPath(pathname);
+      if (pathname === '/search' && window.location.search) {
+        setRouteParams(queryParamsToFilters(window.location.search));
+      } else {
+        setRouteParams({});
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const navigate = (path: string, params: any = {}) => {
-    setCurrentPath(path);
+    let targetPath = path;
+    if (path === '/search' && params && Object.keys(params).length > 0) {
+      const queryString = filtersToQueryParams(params);
+      if (queryString) {
+        targetPath = `/search?${queryString}`;
+      }
+    }
+    setCurrentPath(path.split('?')[0]);
     setRouteParams(params);
-    window.history.pushState({}, '', path);
+    window.history.pushState({}, '', targetPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
