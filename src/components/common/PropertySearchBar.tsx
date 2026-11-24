@@ -53,7 +53,7 @@ const BUDGET_PRESETS = [
   { label: '₹50 Lakhs – ₹1 Crore', min: 5000000, max: 10000000 },
   { label: '₹1 Crore – ₹2 Crores', min: 10000000, max: 20000000 },
   { label: '₹2 Crores – ₹5 Crores', min: 20000000, max: 50000000 },
-  { label: '₹5 Crores+', min: 50000000, max: undefined },
+  { label: '₹10 Crores+', min: 100000000, max: undefined },
 ];
 
 const MIN_BUDGET_OPTIONS = [
@@ -66,6 +66,7 @@ const MIN_BUDGET_OPTIONS = [
   { label: '₹2 Crores', value: 20000000 },
   { label: '₹3 Crores', value: 30000000 },
   { label: '₹5 Crores', value: 50000000 },
+  { label: '₹10 Crores', value: 100000000 },
 ];
 
 const MAX_BUDGET_OPTIONS = [

@@ -45,7 +45,7 @@ export const BudgetRangeSelect: React.FC<BudgetRangeSelectProps> = ({
     { label: '₹75L – ₹1.5 Cr', sub: 'Mid-range & 3 BHK', min: 7500000, max: 15000000 },
     { label: '₹1.5 Cr – ₹3 Cr', sub: 'Kokapet & Gachibowli luxury', min: 15000000, max: 30000000 },
     { label: '₹3 Cr – ₹5 Cr', sub: 'Villas & penthouses', min: 30000000, max: 50000000 },
-    { label: '₹5 Cr+', sub: 'Ultra luxury villas & plots', min: 50000000 }
+    { label: '₹10 Cr+', sub: 'Ultra luxury villas & plots', min: 100000000 }
   ];
 
   const RENT_PRESETS = [

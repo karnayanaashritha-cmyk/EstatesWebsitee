@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Property } from '../types';
 import { PropertyService } from '../services/propertyService';
 import { HeroSection } from '../components/home/HeroSection';
+import { PropertySearchBar } from '../components/common/PropertySearchBar';
 import { FeaturedListings } from '../components/home/FeaturedListings';
 import { LocalityGrid } from '../components/home/LocalityGrid';
 import { HyderabadHighlights } from '../components/home/HyderabadHighlights';
-import { PlusCircle, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { PlusCircle, Sparkles, ArrowRight, ShieldCheck, TrendingUp } from 'lucide-react';
 
 interface HomePageProps {
   onNavigate: (path: string, params?: any) => void;
@@ -18,6 +19,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 }) => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const trendingLocalities = ['Kokapet', 'Gachibowli', 'Tellapur', 'Narsingi', 'Miyapur', 'Financial District', 'Manikonda', 'Kukatpally'];
 
   useEffect(() => {
     loadFeaturedProperties();
@@ -42,6 +45,39 @@ export const HomePage: React.FC<HomePageProps> = ({
         onNavigate={onNavigate}
         totalListingsCount={properties.length}
       />
+
+      {/* Property Search Bar & Quick Localities Section */}
+      <section className="relative z-20 mt-3 sm:-mt-8 md:-mt-10 lg:-mt-12 max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 mb-10 sm:mb-14 w-full">
+        <PropertySearchBar
+          onSearch={criteria => {
+            onNavigate('/search', {
+              localities: criteria.locations,
+              locality: criteria.locations[0] || '',
+              propertyTypes: criteria.propertyTypes,
+              propertyType: criteria.propertyTypes[0] || 'all',
+              minPrice: criteria.minPrice,
+              maxPrice: criteria.maxPrice,
+            });
+          }}
+        />
+
+        {/* Quick Trending Corridors */}
+        <div className="mt-3.5 px-2 sm:px-3 flex items-center gap-1.5 text-xs overflow-x-auto scrollbar-none pb-1">
+          <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1 flex-shrink-0">
+            <TrendingUp className="w-3.5 h-3.5 text-red-600" /> Popular:
+          </span>
+          {trendingLocalities.map(locality => (
+            <button
+              key={locality}
+              type="button"
+              onClick={() => onNavigate('/search', { localities: [locality], locality })}
+              className="px-2.5 py-1 rounded-full bg-white hover:bg-red-50 hover:text-red-700 text-slate-700 font-medium transition border border-slate-200/80 shadow-xs whitespace-nowrap flex-shrink-0 cursor-pointer"
+            >
+              {locality}
+            </button>
+          ))}
+        </div>
+      </section>
 
       {/* Featured Properties Grid */}
       <FeaturedListings

@@ -1,73 +1,66 @@
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
-import { PropertySearchBar } from '../common/PropertySearchBar';
 
 interface HeroSectionProps {
   onNavigate: (path: string, params?: any) => void;
   totalListingsCount?: number;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListingsCount = 0 }) => {
-
-  const trendingLocalities = ['Kokapet', 'Gachibowli', 'Tellapur', 'Narsingi', 'Miyapur', 'Financial District', 'Manikonda', 'Kukatpally'];
-
+export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   return (
-    <section className="relative overflow-hidden bg-[#f7f5f1] pt-6 pb-10 sm:pt-8 sm:pb-12 md:pt-12 md:pb-16">
-      <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(#b69b7a_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute -top-32 -right-20 w-[34rem] h-[34rem] rounded-full bg-amber-100/50 blur-3xl pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
-        {/* White Hero Card Container */}
-        <div className="relative overflow-hidden bg-white rounded-2xl sm:rounded-3xl p-5 xs:p-6 sm:p-10 md:p-12 lg:p-14 shadow-2xl shadow-slate-200/50 border border-slate-200 max-w-5xl mx-auto">
-          {/* Subtle ambient lighting */}
-          <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-red-500/5 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-slate-100/50 blur-3xl" />
+    <section className="relative w-full min-h-[580px] sm:min-h-[660px] lg:min-h-[780px] xl:min-h-[820px] flex items-center overflow-hidden bg-slate-900 select-none">
+      {/* Background Image Layer: High-quality interior penthouse room with balcony view */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img
+          src="/hero-bg.jpg"
+          alt="Luxury Hyderabad penthouse interior and terrace skyline"
+          className="w-full h-full object-cover object-[76%_center] sm:object-[80%_center] md:object-right"
+        />
 
-          {/* Brand section */}
-          <div className="relative z-10 flex items-center gap-3 sm:gap-4">
-            {/* Rounded-square golden icon container */}
-            <div className="w-11 h-11 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#DDB86F] p-2 sm:p-3 flex items-center justify-center flex-shrink-0 shadow-md">
-              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#102D47]" stroke="currentColor">
-                <path d="M3 21h18" strokeWidth="2" strokeLinecap="round" />
-                <path d="M5 21V11l4-4v14" strokeWidth="2" strokeLinejoin="round" />
-                <path d="M9 7l5-4 5 4v14" strokeWidth="2" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15" />
-                <path d="M13 10h2v3h-2z" fill="currentColor" />
-                <path d="M13 15h2v3h-2z" fill="currentColor" />
-                <circle cx="16" cy="5" r="1.5" fill="#102D47" stroke="none" />
-              </svg>
-            </div>
+        {/* Desktop Light Gradient Overlay: Soft translucent scrim on the left (allows the room to be seen clearly while keeping text crisp) */}
+        <div
+          className="absolute inset-0 hidden md:block"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.64) 36%, rgba(255, 255, 255, 0.28) 58%, rgba(255, 255, 255, 0.04) 76%, rgba(255, 255, 255, 0) 100%)',
+          }}
+        />
 
-            {/* Brand text */}
-            <div className="flex flex-col justify-center min-w-0">
-              <div className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold tracking-wider leading-none">
-                <span className="text-[#102D47]">HYDERABAD </span>
-                <span className="text-[#E8193C]">HEIGHTS</span>
-              </div>
-              <span className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.2em] text-slate-500 mt-1 sm:mt-1.5 uppercase leading-none truncate">
-                YOUR HOME. YOUR FUTURE.
-              </span>
-            </div>
-          </div>
+        {/* Mobile Light Gradient Overlay: Light, balanced gradient that preserves the room visible behind content */}
+        <div
+          className="absolute inset-0 md:hidden"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(255, 255, 255, 0.76) 0%, rgba(255, 255, 255, 0.60) 45%, rgba(255, 255, 255, 0.22) 78%, rgba(255, 255, 255, 0.05) 100%)',
+          }}
+        />
+      </div>
 
-          {/* Thin subtle horizontal divider */}
-          <div className="relative z-10 w-full h-px bg-slate-200 my-4 sm:my-8" />
+      {/* Hero Content Container */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 xs:pt-24 sm:pt-28 lg:pt-32 pb-10 xs:pb-12 sm:pb-16 lg:pb-20">
+        {/* Responsive Reflow: On mobile, soft translucent card to guarantee pristine legibility without washing out the photo; on desktop, spacious open layout */}
+        <div className="max-w-xl lg:max-w-2xl bg-white/60 md:bg-transparent backdrop-blur-2xs md:backdrop-blur-none p-5 xs:p-6 sm:p-8 md:p-0 rounded-3xl md:rounded-none border border-white/40 md:border-0 shadow-lg md:shadow-none shadow-slate-900/5">
+          {/* Top Crimson Accent Bar */}
+          <div className="w-10 sm:w-12 h-[3.5px] bg-[#c81e35] rounded-full mb-4 sm:mb-6" />
 
-          {/* Main heading */}
-          <h1 className="relative z-10 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-[#102D47] tracking-tight leading-[1.18] max-w-2xl">
-            Find Your Dream Home in Hyderabad
+          {/* Main Headline */}
+          <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.25rem] font-extrabold text-black tracking-tight leading-[1.12] sm:leading-[1.08]">
+            Find Your<br />
+            Dream House in<br />
+            Hyderabad
           </h1>
 
           {/* Subtitle */}
-          <p className="relative z-10 mt-2.5 sm:mt-4 text-xs xs:text-sm sm:text-base md:text-lg text-slate-600 font-normal leading-relaxed">
-            Buy · Rent · Sell — Flats, Villas & Plots
+          <p className="mt-3 sm:mt-4 text-sm xs:text-base sm:text-lg lg:text-xl text-slate-700 font-medium tracking-normal leading-relaxed">
+            Buy · Rent · Sell — Flats, Villas &amp; Plots
           </p>
 
-          {/* Action buttons */}
-          <div className="relative z-10 mt-6 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-4">
+          {/* Action Buttons Row */}
+          <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-2.5 xs:gap-3 sm:gap-4">
             <button
               id="hero-buy-btn"
               type="button"
               onClick={() => onNavigate('/search', { listingType: 'buy' })}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-50 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
+              className="h-11 sm:h-12 px-5 xs:px-6 sm:px-7 rounded-full bg-white hover:bg-slate-50 text-[#102D47] font-bold text-xs xs:text-sm sm:text-base border border-slate-300 shadow-xs hover:border-slate-400 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer min-h-[44px] flex items-center justify-center"
             >
               Buy Property
             </button>
@@ -75,7 +68,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               id="hero-rent-btn"
               type="button"
               onClick={() => onNavigate('/search', { listingType: 'rent' })}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-white hover:bg-slate-50 text-[#102D47] font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
+              className="h-11 sm:h-12 px-5 xs:px-6 sm:px-7 rounded-full bg-white hover:bg-slate-50 text-[#102D47] font-bold text-xs xs:text-sm sm:text-base border border-slate-300 shadow-xs hover:border-slate-400 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer min-h-[44px] flex items-center justify-center"
             >
               Rent Property
             </button>
@@ -83,52 +76,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, totalListi
               id="hero-list-btn"
               type="button"
               onClick={() => onNavigate('/submit-property')}
-              className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-7 bg-[#E8193C] hover:bg-[#d01535] text-white font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E8193C]"
+              className="h-11 sm:h-12 px-5 xs:px-6 sm:px-7 rounded-full bg-[#c81e35] hover:bg-[#b0172b] text-white font-bold text-xs xs:text-sm sm:text-base shadow-md shadow-red-700/20 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5 xs:gap-2 cursor-pointer min-h-[44px]"
             >
-              List Property
+              <span>List Property</span>
+              <span className="text-base sm:text-lg leading-none font-normal">→</span>
             </button>
           </div>
-        </div>
 
-        {/* Modern Property Search Bar (Matches Reference Layout) */}
-        <div className="relative max-w-5xl mx-auto mt-6 sm:mt-10 overflow-visible z-30">
-          <PropertySearchBar
-            onSearch={criteria => {
-              onNavigate('/search', {
-                localities: criteria.locations,
-                locality: criteria.locations[0] || '',
-                propertyTypes: criteria.propertyTypes,
-                propertyType: criteria.propertyTypes[0] || 'all',
-                minPrice: criteria.minPrice,
-                maxPrice: criteria.maxPrice,
-              });
-            }}
-          />
+          {/* Stats Row: Compact, balanced 3-column grid */}
+          <div className="mt-7 sm:mt-12 lg:mt-16 pt-5 sm:pt-6 border-t border-slate-300/60 grid grid-cols-3 gap-2 xs:gap-3 sm:gap-6 max-w-lg">
+            <div className="text-left">
+              <div className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold text-[#102D47] leading-none tracking-tight">
+                5K+
+              </div>
+              <div className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-wider text-slate-600 uppercase mt-1 xs:mt-1.5 leading-tight">
+                HAPPY FAMILIES
+              </div>
+            </div>
 
-          {/* Quick Trending Corridors */}
-          <div className="mt-3.5 px-2 sm:px-3 flex items-center gap-1.5 text-xs overflow-x-auto scrollbar-none pb-1">
-            <span className="text-slate-500 font-semibold flex items-center gap-1 mr-1 flex-shrink-0">
-              <TrendingUp className="w-3.5 h-3.5 text-red-600" /> Popular:
-            </span>
-            {trendingLocalities.map(locality => (
-              <button
-                key={locality}
-                type="button"
-                onClick={() => onNavigate('/search', { localities: [locality], locality })}
-                className="px-2.5 py-1 rounded-full bg-white/90 hover:bg-red-50 hover:text-red-700 text-slate-700 font-medium transition border border-slate-200/80 shadow-xs whitespace-nowrap flex-shrink-0"
-              >
-                {locality}
-              </button>
-            ))}
+            <div className="text-left border-l border-slate-300/80 pl-2 xs:pl-3 sm:pl-6">
+              <div className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold text-[#102D47] leading-none tracking-tight">
+                500+
+              </div>
+              <div className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-wider text-slate-600 uppercase mt-1 xs:mt-1.5 leading-tight">
+                LISTED PROPERTIES
+              </div>
+            </div>
+
+            <div className="text-left border-l border-slate-300/80 pl-2 xs:pl-3 sm:pl-6">
+              <div className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold text-[#102D47] leading-none tracking-tight">
+                10+
+              </div>
+              <div className="text-[9px] xs:text-[10px] sm:text-xs font-semibold tracking-wider text-slate-600 uppercase mt-1 xs:mt-1.5 leading-tight">
+                PRIME LOCATIONS
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Stats Row */}
-        <div className="max-w-5xl mx-auto mt-4 sm:mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-center">
-          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-slate-900">{totalListingsCount}</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Available listings</div></div>
-          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-rose-700">8 areas</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Popular localities</div></div>
-          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-slate-900">Buy · Rent</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Ways to find home</div></div>
-          <div className="bg-white/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200 shadow-sm min-w-0"><div className="text-base sm:text-lg font-extrabold text-emerald-700">Direct</div><div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">Owner connections</div></div>
         </div>
       </div>
     </section>

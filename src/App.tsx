@@ -5,6 +5,7 @@ import { Footer } from './components/common/Footer';
 import { SupabaseStatusModal } from './components/common/SupabaseStatusModal';
 import { AuthModal } from './components/common/AuthModal';
 import { EnquiryModal } from './components/property/EnquiryModal';
+import { WhatsAppButton } from './components/common/WhatsAppButton';
 
 import { HomePage } from './pages/HomePage';
 import { SearchPage } from './pages/SearchPage';
@@ -173,6 +174,9 @@ export function App() {
         isOpen={Boolean(enquiryModalProperty)}
         onClose={() => setEnquiryModalProperty(null)}
       />
+
+      {/* Floating WhatsApp Quick Contact Button (Visible on all pages) */}
+      <WhatsAppButton />
     </div>
   );
 }

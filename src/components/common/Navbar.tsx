@@ -32,12 +32,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { isConfigured } = getSupabaseCredentials();
 
   useEffect(() => {
     return AuthService.subscribe(user => {
       setCurrentUser(user);
     });
+  }, []);
+
+  // Handle scroll detection for dynamic navbar styling on home page
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Prevent background scrolling when mobile menu is open
@@ -69,44 +80,45 @@ export const Navbar: React.FC<NavbarProps> = ({
     setUserDropdownOpen(false);
   };
 
+  const isHome = currentPath === '/';
+
+  // Navigation links exactly matching the reference design: Buy, Rent, Sell, Projects, About, Contact
   const navLinks = [
     { label: 'Buy', path: '/search', params: { listingType: 'buy' } },
     { label: 'Rent', path: '/search', params: { listingType: 'rent' } },
-    { label: 'Commercial', path: '/search', params: { propertyType: 'commercial' } },
-    { label: 'Villas', path: '/search', params: { propertyType: 'villa' } },
-    { label: 'Plots', path: '/search', params: { propertyType: 'plot' } },
+    { label: 'Sell', path: '/submit-property' },
+    { label: 'Projects', path: '/search', params: { propertyType: 'apartment' } },
+    { label: 'About', path: '/about' },
+    { label: 'Contact', path: '/contact' },
   ];
 
+  // Header class configuration
+  const headerClasses = isHome
+    ? isScrolled
+      ? 'fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300'
+      : 'absolute top-0 left-0 right-0 z-40 bg-transparent border-b border-transparent transition-all duration-300'
+    : 'sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs transition-all duration-300';
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all select-none">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
+    <header className={`${headerClasses} select-none`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-18 sm:h-20 gap-3 sm:gap-6">
           {/* Logo & Brand Name */}
           <button 
             onClick={() => onNavigate('/')}
-            className="flex items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-xl transition flex-shrink-0"
+            className="flex items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-xl transition flex-shrink-0 cursor-pointer"
             aria-label="Hyderabad Heights Home"
           >
             <Logo size="md" />
           </button>
 
-          {/* Center Navigation Links */}
-          <nav className="hidden lg:flex items-center justify-center gap-1 xl:gap-2 font-medium text-sm text-slate-700 flex-shrink-0">
-            <button
-              onClick={() => onNavigate('/')}
-              className={`px-3 py-2 rounded-xl transition whitespace-nowrap font-semibold ${
-                currentPath === '/' 
-                  ? 'text-rose-600 font-bold bg-rose-50' 
-                  : 'hover:text-rose-600 hover:bg-slate-50'
-              }`}
-            >
-              Home
-            </button>
+          {/* Center Navigation Links matching reference */}
+          <nav className="hidden lg:flex items-center justify-center gap-7 xl:gap-9 font-medium text-[15px] flex-shrink-0">
             {navLinks.map((link) => (
               <button
                 key={link.label}
                 onClick={() => onNavigate(link.path, link.params)}
-                className="px-3 py-2 rounded-xl hover:text-rose-600 hover:bg-slate-50 transition whitespace-nowrap font-semibold"
+                className="text-slate-800 hover:text-[#c81e35] transition font-medium whitespace-nowrap cursor-pointer py-1"
               >
                 {link.label}
               </button>
@@ -114,54 +126,45 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action Controls Row */}
-          <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
-            {/* Search Control */}
+          <div className="hidden lg:flex items-center gap-4 xl:gap-5 flex-shrink-0">
+            {/* Search Icon Button */}
             <button
               onClick={() => onNavigate('/search')}
-              className="flex items-center gap-2 h-10 px-3.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-100 hover:border-slate-300 text-slate-600 hover:text-slate-900 text-xs font-semibold transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-              title="Search all listings"
+              className={`flex items-center justify-center w-10 h-10 rounded-full transition cursor-pointer ${
+                isHome && !isScrolled
+                  ? 'text-white hover:text-rose-200 hover:bg-white/10'
+                  : 'text-slate-700 hover:text-[#c81e35] hover:bg-slate-100'
+              }`}
+              title="Search properties"
+              aria-label="Search properties"
             >
-              <Search className="w-4 h-4 text-slate-500" />
-              <span>Search</span>
+              <Search className="w-5 h-5 stroke-[2.2]" />
+            </button>
+
+            {/* List Property Pill Button */}
+            <button
+              id="nav-list-property-btn"
+              onClick={() => onNavigate('/submit-property')}
+              className="flex items-center justify-center h-10 px-5 sm:px-6 bg-[#c81e35] hover:bg-[#b0172b] text-white text-sm font-semibold rounded-full shadow-sm hover:shadow transition whitespace-nowrap cursor-pointer"
+            >
+              <span>List Property</span>
             </button>
 
             {/* Local DB / Supabase Status Pill */}
             <button
               onClick={onOpenSupabaseModal}
               title={isConfigured ? 'Connected to live Supabase cloud' : 'Running on local emulated database (Click to connect Supabase)'}
-              className={`flex items-center gap-2 h-10 px-3.5 rounded-xl text-xs font-semibold border transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
-                isConfigured 
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' 
-                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+              className={`flex items-center gap-1.5 h-8 px-2.5 rounded-full text-[11px] font-semibold border transition whitespace-nowrap cursor-pointer ${
+                isHome && !isScrolled
+                  ? 'bg-black/30 text-white/90 border-white/20 hover:bg-black/50'
+                  : isConfigured 
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' 
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
               }`}
             >
-              <Database className="w-3.5 h-3.5 text-slate-500" />
-              <span>{isConfigured ? 'Supabase Live' : 'Local DB'}</span>
-              <span className={`w-2 h-2 rounded-full ${isConfigured ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
-            </button>
-
-            {/* Admin Management Button (if admin) */}
-            {currentUser?.role === 'admin' && (
-              <button
-                onClick={() => onNavigate('/admin')}
-                className="flex items-center gap-1.5 h-10 px-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition border border-slate-700 whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-                title="Moderate and manage property listings"
-              >
-                <ShieldCheck className="w-4 h-4 text-rose-400" />
-                <span>Manage</span>
-              </button>
-            )}
-
-            {/* List Property Button */}
-            <button
-              onClick={() => onNavigate(currentUser?.role === 'admin' ? '/admin' : '/submit-property')}
-              className="flex items-center gap-2 h-10 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition whitespace-nowrap flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>{currentUser?.role === 'admin' ? '+ Add Property' : 'List Property'}</span>
-              <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">
-                {currentUser?.role === 'admin' ? 'Admin' : 'Free'}
-              </span>
+              <Database className="w-3 h-3 text-current opacity-80" />
+              <span>{isConfigured ? 'Live' : 'Local'}</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isConfigured ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
             </button>
 
             {/* Sign In or Account Profile */}
@@ -169,27 +172,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 h-10 px-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition text-left whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                  className="flex items-center gap-2 h-10 px-2.5 rounded-full border border-slate-200 bg-white/90 hover:bg-white transition text-left whitespace-nowrap cursor-pointer"
                 >
                   {currentUser.avatar_url ? (
                     <img 
                       src={currentUser.avatar_url} 
                       alt={currentUser.full_name} 
-                      className="w-7 h-7 rounded-lg object-cover" 
+                      className="w-7 h-7 rounded-full object-cover" 
                     />
                   ) : (
-                    <div className="w-7 h-7 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs">
+                    <div className="w-7 h-7 rounded-full bg-[#c81e35]/10 text-[#c81e35] flex items-center justify-center font-bold text-xs">
                       {currentUser.full_name.charAt(0)}
                     </div>
                   )}
-                  <div className="text-left hidden xl:block">
-                    <div className="text-xs font-bold text-slate-800 leading-none truncate max-w-[100px]">
-                      {currentUser.full_name}
-                    </div>
-                    <div className="text-[10px] text-rose-600 font-semibold capitalize mt-0.5">
-                      {currentUser.role === 'admin' ? '👑 Admin' : currentUser.role}
-                    </div>
-                  </div>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
@@ -218,9 +213,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setUserDropdownOpen(false);
                           onNavigate('/admin');
                         }}
-                        className="w-full text-left px-4 py-2.5 text-xs text-rose-700 font-bold hover:bg-rose-50 flex items-center gap-2.5 transition"
+                        className="w-full text-left px-4 py-2.5 text-xs text-[#c81e35] font-bold hover:bg-rose-50 flex items-center gap-2.5 transition"
                       >
-                        <ShieldCheck className="w-4 h-4 text-rose-600" />
+                        <ShieldCheck className="w-4 h-4 text-[#c81e35]" />
                         <span>Admin Moderation Portal</span>
                       </button>
                     )}
@@ -240,29 +235,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onOpenAuthModal}
-                className="flex items-center gap-1.5 h-10 px-4 border border-slate-300 hover:border-rose-400 hover:text-rose-600 text-slate-700 text-xs font-bold rounded-xl bg-white hover:bg-rose-50/40 transition whitespace-nowrap flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                className={`flex items-center gap-1.5 h-9 px-3.5 rounded-full text-xs font-semibold transition whitespace-nowrap cursor-pointer ${
+                  isHome && !isScrolled
+                    ? 'text-white/90 hover:text-white border border-white/20 hover:bg-white/10'
+                    : 'text-slate-700 hover:text-[#c81e35] border border-slate-300 hover:border-[#c81e35] bg-white'
+                }`}
               >
-                <User className="w-4 h-4" />
+                <User className="w-3.5 h-3.5" />
                 <span>Sign In</span>
               </button>
             )}
           </div>
 
           {/* Mobile Actions & Menu Toggle (< lg) */}
-          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden flex-shrink-0">
+          <div className="flex items-center gap-1.5 xs:gap-2 lg:hidden flex-shrink-0">
             {/* Mobile Search Button */}
             <button
               onClick={() => onNavigate('/search')}
-              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/85 hover:bg-white border border-slate-200/90 text-slate-800 shadow-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c81e35] cursor-pointer"
               aria-label="Search listings"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 stroke-[2.2]" />
             </button>
 
             {/* Mobile List Property Button */}
             <button
               onClick={() => onNavigate(currentUser?.role === 'admin' ? '/admin' : '/submit-property')}
-              className="flex items-center gap-1 h-9 sm:h-10 px-2.5 sm:px-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className="flex items-center gap-1 h-9 sm:h-10 px-3 sm:px-3.5 bg-[#c81e35] hover:bg-[#b0172b] text-white text-xs font-bold rounded-full transition shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c81e35] cursor-pointer"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>List</span>
@@ -271,11 +270,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-700 hover:bg-slate-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/85 hover:bg-white border border-slate-200/90 text-slate-800 shadow-xs transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c81e35] cursor-pointer"
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
